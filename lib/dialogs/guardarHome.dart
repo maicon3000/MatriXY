@@ -1,14 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:matrixyy/dialogs/custom_alert_dialog2.1.dart';
-import '../dialogs/custom_alert_dialog1.1.dart';
-import '../widgets/containers.dart';
-import '../widgets/containers2.dart';
+/*import 'package:flutter/material.dart';
+import '../dialogs/custom_alert_dialog.dart';
 
 class HomePage extends StatefulWidget {
-  final String? matriz1; //recebendo a variavel matriz, colocando no construtor
-  final String? matriz2;
-
-  const HomePage({super.key, this.matriz1, this.matriz2});
+  String? matriz; //recebendo a variavel matriz, colocando no construtor
+  HomePage({super.key, required this.matriz});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -20,8 +15,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final matriz1 = widget.matriz1;
-    final matriz2 = widget.matriz2;
+    final matriz = widget.matriz;
 
     final myHistoricTile = GestureDetector(
       onTap: () {
@@ -81,6 +75,56 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
+      ),
+    );
+    final myYellowContainer = Container(
+      alignment: Alignment.center,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Color.fromRGBO(155, 115, 61, 1),
+            Color.fromRGBO(253, 173, 65, 1),
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+        borderRadius: BorderRadius.only(
+          bottomRight: Radius.circular(15),
+          bottomLeft: Radius.circular(15),
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(15),
+        ),
+      ),
+      width: MediaQuery.of(context).size.width * 0.5,
+      height: MediaQuery.of(context).size.height * 0.24,
+      child: Text(
+        matriz ?? 'pois digite x',
+        style: const TextStyle(color: Colors.purple),
+      ),
+    );
+    final myYellowContainer2 = Container(
+      alignment: Alignment.center,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Color.fromRGBO(155, 115, 61, 1),
+            Color.fromRGBO(253, 173, 65, 1),
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+        borderRadius: BorderRadius.only(
+          bottomRight: Radius.circular(15),
+          bottomLeft: Radius.circular(15),
+          topLeft: Radius.circular(15),
+          topRight: Radius.circular(30),
+        ),
+      ),
+      width: MediaQuery.of(context).size.width * 0.5,
+      height: MediaQuery.of(context).size.height * 0.24,
+      child: const Text(
+        'pois digite y.',
+        style: TextStyle(color: Colors.white),
       ),
     );
     final myAppBarContainer = Container(
@@ -180,21 +224,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            content: Column(children: [
-                              Text('$matriz1'),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Text('$matriz2'),
-                            ]),
-                          );
-                        });
-                  },
+                  onPressed: () {},
                   child: const Text(
                     'Calcular',
                     style: TextStyle(color: Colors.black),
@@ -207,79 +237,50 @@ class _HomePageState extends State<HomePage> {
       ),
     );
 
-    void showCustomDialog1() {
+    void showCustomDialog() {
       showDialog(
         context: context,
         builder: (BuildContext context) {
-          return CustomAlertDialog();
+          return CustomAlertDialog(
+            selectedLine: null,
+            selectedColumn: null,
+          ); // Substitua CustomAlertDialog pelo nome correto do seu AlertDialog em outro arquivo
         },
       );
     }
 
-    void showCustomDialog2() {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return CustomAlertDialog3();
-        },
-      );
-    }
+   
+     Usando o Navigator.pop para passar o valor e o 
+     ModalRoute.of(context)?.settings.arguments para recebê-lo, 
+     não é necessário usar o setState. Essa abordagem permite que 
+     você passe o valor entre telas sem a necessidade de declarar 
+     uma variável adicional no escopo do build e usar o setState para atualizá-la.
+     
 
     return Scaffold(
       backgroundColor: const Color.fromRGBO(245, 245, 245, 1),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           myAppBarContainer,
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
-            child: Column(
+            child: Row(
+              //matrizes
               children: [
-                Stack(
-                  children: [
-/*Quanto ao uso do top, bottom, left e right em Positioned, essas propriedades são usadas para definir a 
-posição de um widget filho dentro do Stack, especificando as distâncias a partir das bordas do Stack. 
-No entanto, ao usar o Positioned.fill, o widget filho ocupará todo o espaço disponível dentro do Stack, 
-portanto, não é necessário especificar as propriedades top, bottom, left e right. 
-*/
-                    Positioned.fill(
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          height: MediaQuery.of(context).size.height * 0.14,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    Row(
-                      //matrizes
-                      children: [
-                        InkWell(
-                          //animacao
-                          onTap: () {
-                            showCustomDialog1();
-                          },
-                          child: MyContainer(
-                            text1: matriz1,
-                          ),
-                        ),
-                        InkWell(
-                          //animacao
-                          onTap: () {
-                            showCustomDialog2();
-                          },
-                          child: MyContainer2(
-                            text2: matriz2,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                InkWell(
+                  //animacao
+                  onTap: () {
+                    showCustomDialog();
+                  },
+                  child: myYellowContainer,
                 ),
-                myBlackContainer,
+                GestureDetector(
+                  child: myYellowContainer2,
+                ),
               ],
             ),
           ),
+          myBlackContainer,
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(top: 8.0),
@@ -337,4 +338,4 @@ portanto, não é necessário especificar as propriedades top, bottom, left e ri
       ),
     );
   }
-}
+}*/
