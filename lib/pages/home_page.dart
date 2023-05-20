@@ -1,27 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:matrixyy/dialogs/custom_alert_dialog2.1.dart';
-import '../dialogs/custom_alert_dialog1.1.dart';
-import '../widgets/containers.dart';
-import '../widgets/containers2.dart';
+
+import '../matrix/matrix.dart';
 
 class HomePage extends StatefulWidget {
-  final String? matriz1; //recebendo a variavel matriz, colocando no construtor
-  final String? matriz2;
-
-  const HomePage({super.key, this.matriz1, this.matriz2});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  //INSTANCIANDO DUAS MATRIZES
+  Matrix? matrix1;
+  Matrix? matrix2;
+
+  //DropdowButton DE CALCULAR
   List<String> items = ['adicao', 'subracao', 'multiplicacao', 'divisao'];
   String? selectedOption;
 
+  //DropdowButton DO PRIMEIRO DIÁLOGO
+  List<int> line = [1, 2, 3, 4, 5];
+  List<int> column = [1, 2, 3, 4, 5];
+
+  //PARA MUDAR INSTANTANEAMENTE O VALOR SELECIONADO NO DropdownMenuItem
+  ValueNotifier<int?> selectedRows = ValueNotifier<int?>(null);
+  ValueNotifier<int?> selectedColumns = ValueNotifier<int?>(null);
+
   @override
   Widget build(BuildContext context) {
-    final matriz1 = widget.matriz1;
-    final matriz2 = widget.matriz2;
+    //CADA TILE DO HISTORICO
 
     final myHistoricTile = GestureDetector(
       onTap: () {
@@ -83,6 +90,8 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+    //APPBAR
+
     final myAppBarContainer = Container(
       //'appbar'
       height: MediaQuery.of(context).size.height * 0.13,
@@ -111,6 +120,8 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+    //CONTAINER DE ESCOLHER OPERAÇÃO
+
     final myBlackContainer = Container(
       // container preto
       height: MediaQuery.of(context).size.height * 0.14,
@@ -180,21 +191,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            content: Column(children: [
-                              Text('$matriz1'),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Text('$matriz2'),
-                            ]),
-                          );
-                        });
-                  },
+                  onPressed: () {},
                   child: const Text(
                     'Calcular',
                     style: TextStyle(color: Colors.black),
@@ -207,21 +204,259 @@ class _HomePageState extends State<HomePage> {
       ),
     );
 
-    void showCustomDialog1() {
+    //DIALOGO DOS ELEMENTOS
+    void openElementsDialog(int containerIndex, int rows, int columns) {
       showDialog(
         context: context,
-        builder: (BuildContext context) {
-          return CustomAlertDialog();
+        builder: (context) {
+          List<List<TextEditingController>> controllers = List.generate(
+            rows,
+            (_) => List.generate(columns, (_) => TextEditingController()),
+          );
+
+          return AlertDialog(
+            title: Text('Matrix ${containerIndex + 1}'),
+            content: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const Text('Enter matrix elements:'),
+                  const SizedBox(height: 16),
+                  Table(
+                    defaultColumnWidth: const IntrinsicColumnWidth(),
+                    children: List.generate(rows, (row) {
+                      return TableRow(
+                        children: List.generate(columns, (column) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: TextField(
+                              controller: controllers[row][column],
+                              keyboardType: TextInputType.number,
+                              textAlign: TextAlign.center,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                isDense: true,
+                                contentPadding: EdgeInsets.zero,
+                              ),
+                            ),
+                          );
+                        }),
+                      );
+                    }),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  List<List<int>> elements = List.generate(
+                    rows,
+                    (row) => List.generate(
+                      columns,
+                      (column) =>
+                          int.tryParse(
+                            controllers[row][column].text.trim(),
+                          ) ??
+                          0,
+                    ),
+                  );
+
+                  Matrix matrix = Matrix(rows, columns, elements);
+
+                  setState(() {
+                    if (containerIndex == 0) {
+                      matrix1 = matrix;
+                    } else {
+                      matrix2 = matrix;
+                    }
+                  });
+
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
         },
       );
     }
 
-    void showCustomDialog2() {
+    //DIALOGO DO TAMANHO DA MATRIZ
+    void openMatrixDialog(int containerIndex) {
       showDialog(
         context: context,
-        builder: (BuildContext context) {
-          return CustomAlertDialog3();
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Matrix ${containerIndex + 1}'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    const Text('Entre com o tamanho da matriz'),
+                    const SizedBox(width: 10),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        width: 30,
+                        height: 30,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.red,
+                        ),
+                        child: const Icon(
+                          Icons.close,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    const Text('Rows:'),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: ValueListenableBuilder<int?>(
+                        valueListenable: selectedRows,
+                        builder: (context, value, child) {
+                          return DropdownButton<int>(
+                            isExpanded: true,
+                            value: value,
+                            onChanged: (newValue) {
+                              selectedRows.value = newValue;
+                            },
+                            hint: const Text(
+                              'selecione',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            items: line
+                                .map<DropdownMenuItem<int>>(
+                                  (value) => DropdownMenuItem<int>(
+                                    value: value,
+                                    child: Text(value.toString()),
+                                  ),
+                                )
+                                .toList(),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    const Text('Columns:'),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: ValueListenableBuilder<int?>(
+                        valueListenable: selectedColumns,
+                        builder: (context, value, child) {
+                          return DropdownButton<int>(
+                            isExpanded: true,
+                            value: value,
+                            onChanged: (newValue) {
+                              selectedColumns.value = newValue;
+                            },
+                            hint: const Text(
+                              'selecione',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            items: column
+                                .map<DropdownMenuItem<int>>(
+                                  (value) => DropdownMenuItem<int>(
+                                    value: value,
+                                    child: Text(value.toString()),
+                                  ),
+                                )
+                                .toList(),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  openElementsDialog(containerIndex, selectedRows.value!,
+                      selectedColumns.value!);
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
         },
+      );
+    }
+
+    //CONTAINER COM AS MATRIZES
+    Widget buildMatrixContainer(int containerIndex, Matrix? matrix) {
+      return InkWell(
+        onTap: () {
+          openMatrixDialog(containerIndex);
+        },
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.5,
+          height: MediaQuery.of(context).size.height * 0.24,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color.fromRGBO(155, 115, 61, 1),
+                Color.fromRGBO(253, 173, 65, 1),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+            borderRadius: BorderRadius.only(
+              bottomRight: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(15),
+            ),
+          ),
+          child: Center(
+            child: matrix != null
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Matrix ${containerIndex + 1}',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      Text('${matrix.rows}x${matrix.columns}'),
+                      const SizedBox(height: 8),
+                      const Text('Elements:'),
+                      const SizedBox(height: 8),
+                      for (var row in matrix.elements) Text(row.join('  ')),
+                    ],
+                  )
+                : Text(
+                    'Matrix ${containerIndex + 1}\nClick to add matrix',
+                    textAlign: TextAlign.center,
+                  ),
+          ),
+        ),
       );
     }
 
@@ -254,24 +489,8 @@ portanto, não é necessário especificar as propriedades top, bottom, left e ri
                     Row(
                       //matrizes
                       children: [
-                        InkWell(
-                          //animacao
-                          onTap: () {
-                            showCustomDialog1();
-                          },
-                          child: MyContainer(
-                            text1: matriz1,
-                          ),
-                        ),
-                        InkWell(
-                          //animacao
-                          onTap: () {
-                            showCustomDialog2();
-                          },
-                          child: MyContainer2(
-                            text2: matriz2,
-                          ),
-                        ),
+                        buildMatrixContainer(0, matrix1),
+                        buildMatrixContainer(1, matrix2),
                       ],
                     ),
                   ],
