@@ -444,10 +444,6 @@ class _HomePageState extends State<HomePage> {
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
-                      Text('${matrix.rows}x${matrix.columns}'),
-                      const SizedBox(height: 8),
-                      const Text('Elements:'),
-                      const SizedBox(height: 8),
                       for (var row in matrix.elements) Text(row.join('  ')),
                     ],
                   )
