@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../matrix/matrix.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,7 +14,15 @@ class _HomePageState extends State<HomePage> {
   Matrix? matrix2;
 
   //DropdowButton DE CALCULAR
-  List<String> items = ['adicao', 'subracao', 'multiplicacao', 'divisao'];
+  List<String> items = [
+    'Selecione',
+    'Adição',
+    'Subtração',
+    'Multiplicação',
+    'Divisão',
+    'Transposição',
+    'Inversão'
+  ];
   String? selectedOption;
 
   //DropdowButton DO PRIMEIRO DIÁLOGO
@@ -66,7 +73,7 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: const [
                     Text(
-                      'Adicao',
+                      'Adição',
                       style: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 12,
@@ -110,11 +117,11 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: const [
-            Text('bem vindo mulekot'),
+            Text('Bem-Vindo mulekot'),
             Icon(Icons.person),
           ],
         ),
@@ -137,7 +144,7 @@ class _HomePageState extends State<HomePage> {
             const Padding(
               padding: EdgeInsets.only(top: 2.0),
               child: Text(
-                'Operacao',
+                'Operação',
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   color: Colors.white,
@@ -148,29 +155,30 @@ class _HomePageState extends State<HomePage> {
               child: Container(
                 margin: const EdgeInsets.only(top: 8.0),
                 color: Colors.white,
-                child: DropdownButton<String>(
-                  value: selectedOption,
-                  isExpanded: true,
-                  onChanged: (newValue) {
-                    setState(() {
-                      selectedOption = newValue;
-                    });
-                  },
-                  hint: const Text(
-                    'selecione',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  items: items
-                      .map<DropdownMenuItem<String>>(
-                        (String value) => DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(
-                            value,
-                            style: const TextStyle(color: Colors.black),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5.0),
+                  child: DropdownButton<String>(
+                    value: selectedOption ?? items[0],
+                    isExpanded: true,
+                    elevation: 16,
+                    underline: Container(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        selectedOption = newValue;
+                      });
+                    },
+                    items: items
+                        .map<DropdownMenuItem<String>>(
+                          (String value) => DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(
+                              value,
+                              style: const TextStyle(color: Colors.black),
+                            ),
                           ),
-                        ),
-                      )
-                      .toList(),
+                        )
+                        .toList(),
+                  ),
                 ),
               ),
             ),
@@ -215,27 +223,53 @@ class _HomePageState extends State<HomePage> {
           );
 
           return AlertDialog(
-            title: Text('Matrix ${containerIndex + 1}'),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Matriz ${containerIndex + 1}'),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    width: 30,
+                    height: 30,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.red,
+                    ),
+                    child: const Icon(
+                      Icons.close,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
             content: SingleChildScrollView(
               child: Column(
                 children: [
-                  const Text('Enter matrix elements:'),
+                  const Text('Entre com os elementos da matriz:'),
                   const SizedBox(height: 16),
                   Table(
                     defaultColumnWidth: const IntrinsicColumnWidth(),
                     children: List.generate(rows, (row) {
                       return TableRow(
                         children: List.generate(columns, (column) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4),
+                          return SizedBox(
+                            width: 50,
+                            height: 30,
                             child: TextField(
                               controller: controllers[row][column],
                               keyboardType: TextInputType.number,
                               textAlign: TextAlign.center,
+                              style: const TextStyle(fontSize: 18),
                               decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
-                                isDense: true,
-                                contentPadding: EdgeInsets.zero,
+                                contentPadding: EdgeInsets.all(3),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.blue),
+                                ),
                               ),
                             ),
                           );
@@ -251,7 +285,7 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: const Text('Cancel'),
+                child: const Text('Cancelar'),
               ),
               TextButton(
                 onPressed: () {
@@ -293,34 +327,32 @@ class _HomePageState extends State<HomePage> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Matrix ${containerIndex + 1}'),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Matriz ${containerIndex + 1}'),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    width: 30,
+                    height: 30,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.red,
+                    ),
+                    child: const Icon(
+                      Icons.close,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  children: [
-                    const Text('Entre com o tamanho da matriz'),
-                    const SizedBox(width: 10),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Container(
-                        width: 30,
-                        height: 30,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.red,
-                        ),
-                        child: const Icon(
-                          Icons.close,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
                 Row(
                   children: [
                     const Text('Rows:'),
@@ -336,7 +368,7 @@ class _HomePageState extends State<HomePage> {
                               selectedRows.value = newValue;
                             },
                             hint: const Text(
-                              'selecione',
+                              'Selecione',
                               style: TextStyle(color: Colors.black),
                             ),
                             items: line
@@ -356,7 +388,7 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 16),
                 Row(
                   children: [
-                    const Text('Columns:'),
+                    const Text('Colunas:'),
                     const SizedBox(width: 16),
                     Expanded(
                       child: ValueListenableBuilder<int?>(
@@ -369,7 +401,7 @@ class _HomePageState extends State<HomePage> {
                               selectedColumns.value = newValue;
                             },
                             hint: const Text(
-                              'selecione',
+                              'Selecione',
                               style: TextStyle(color: Colors.black),
                             ),
                             items: column
@@ -393,13 +425,16 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: const Text('Cancel'),
+                child: const Text('Cancelar'),
               ),
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
-                  openElementsDialog(containerIndex, selectedRows.value!,
-                      selectedColumns.value!);
+                  openElementsDialog(
+                    containerIndex,
+                    selectedRows.value!,
+                    selectedColumns.value!,
+                  );
                 },
                 child: const Text('OK'),
               ),
@@ -440,7 +475,7 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Matrix ${containerIndex + 1}',
+                        'Matriz ${containerIndex + 1}',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
@@ -448,7 +483,7 @@ class _HomePageState extends State<HomePage> {
                     ],
                   )
                 : Text(
-                    'Matrix ${containerIndex + 1}\nClick to add matrix',
+                    'Clique para adicionar a\nMatriz ${containerIndex + 1}',
                     textAlign: TextAlign.center,
                   ),
           ),
@@ -468,10 +503,10 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Stack(
                   children: [
-/*Quanto ao uso do top, bottom, left e right em Positioned, essas propriedades são usadas para definir a 
-posição de um widget filho dentro do Stack, especificando as distâncias a partir das bordas do Stack. 
-No entanto, ao usar o Positioned.fill, o widget filho ocupará todo o espaço disponível dentro do Stack, 
-portanto, não é necessário especificar as propriedades top, bottom, left e right. 
+/*Quanto ao uso do top, bottom, left e right em Positioned, essas propriedades são usadas para definir a
+posição de um widget filho dentro do Stack, especificando as distâncias a partir das bordas do Stack.
+No entanto, ao usar o Positioned.fill, o widget filho ocupará todo o espaço disponível dentro do Stack,
+portanto, não é necessário especificar as propriedades top, bottom, left e right.
 */
                     Positioned.fill(
                       child: Align(
