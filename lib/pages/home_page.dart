@@ -26,12 +26,12 @@ class _HomePageState extends State<HomePage> {
   String? selectedOption;
 
   //DropdowButton DO PRIMEIRO DIÁLOGO
-  List<int> line = [1, 2, 3, 4, 5];
+  List<int> row = [1, 2, 3, 4, 5];
   List<int> column = [1, 2, 3, 4, 5];
 
   //PARA MUDAR INSTANTANEAMENTE O VALOR SELECIONADO NO DropdownMenuItem
-  ValueNotifier<int?> selectedRows = ValueNotifier<int?>(null);
-  ValueNotifier<int?> selectedColumns = ValueNotifier<int?>(null);
+  ValueNotifier<int?> selectedRows = ValueNotifier<int?>(1);
+  ValueNotifier<int?> selectedColumns = ValueNotifier<int?>(1);
 
   @override
   Widget build(BuildContext context) {
@@ -363,15 +363,11 @@ class _HomePageState extends State<HomePage> {
                         builder: (context, value, child) {
                           return DropdownButton<int>(
                             isExpanded: true,
-                            value: value,
+                            value: value ?? row[0],
                             onChanged: (newValue) {
                               selectedRows.value = newValue;
                             },
-                            hint: const Text(
-                              'Selecione',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            items: line
+                            items: row
                                 .map<DropdownMenuItem<int>>(
                                   (value) => DropdownMenuItem<int>(
                                     value: value,
@@ -396,7 +392,7 @@ class _HomePageState extends State<HomePage> {
                         builder: (context, value, child) {
                           return DropdownButton<int>(
                             isExpanded: true,
-                            value: value,
+                            value: value ?? column[0],
                             onChanged: (newValue) {
                               selectedColumns.value = newValue;
                             },
