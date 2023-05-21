@@ -10,19 +10,20 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   //INSTANCIANDO DUAS MATRIZES
-  Matrix? matrix1;
-  Matrix? matrix2;
+  Matriz? matriz1;
+  Matriz? matriz2;
 
   //DropdowButton DE CALCULAR
-  List<String> items = [
-    'Selecione',
-    'Adição',
-    'Subtração',
-    'Multiplicação',
-    'Divisão',
-    'Transposição',
-    'Inversão'
-  ];
+  Map<int, String> item = {
+    0: 'Selecione',
+    1: 'Adição',
+    2: 'Subtração',
+    3: 'Multiplicação',
+    4: 'Divisão',
+    5: 'Transposição',
+    6: 'Inversão'
+  };
+
   String? selectedOption;
 
   //DropdowButton DO PRIMEIRO DIÁLOGO
@@ -158,7 +159,7 @@ class _HomePageState extends State<HomePage> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 5.0),
                   child: DropdownButton<String>(
-                    value: selectedOption ?? items[0],
+                    value: selectedOption ?? item[item.keys.first],
                     isExpanded: true,
                     elevation: 16,
                     underline: Container(),
@@ -167,17 +168,15 @@ class _HomePageState extends State<HomePage> {
                         selectedOption = newValue;
                       });
                     },
-                    items: items
-                        .map<DropdownMenuItem<String>>(
-                          (String value) => DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: const TextStyle(color: Colors.black),
-                            ),
-                          ),
-                        )
-                        .toList(),
+                    items: item.entries.map<DropdownMenuItem<String>>(
+                          (entry) => DropdownMenuItem<String>(
+                        value: entry.value,
+                        child: Text(
+                          entry.value,
+                          style: const TextStyle(color: Colors.black),
+                        ),
+                      ),
+                    ).toList(),
                   ),
                 ),
               ),
@@ -199,7 +198,30 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    switch (selectedOption) {
+                      case 'Adição':
+                        operacao(matriz1, matriz2, item.keys.elementAt(1), item[item.keys.elementAt(1)]!);
+                        break;
+                      case 'Subtração':
+                        operacao(matriz1, matriz2, item.keys.elementAt(2), item[item.keys.elementAt(2)]!);
+                        break;
+                      case 'Multiplicação':
+                        operacao(matriz1, matriz2, item.keys.elementAt(3), item[item.keys.elementAt(3)]!);
+                        break;
+                      case 'Divisão':
+                        operacao(matriz1, matriz2, item.keys.elementAt(4), item[item.keys.elementAt(4)]!);
+                        break;
+                      case 'Transposição':
+                        operacao(matriz1, matriz2, item.keys.elementAt(5), item[item.keys.elementAt(5)]!);
+                        break;
+                      case 'Inversão':
+                        operacao(matriz1, matriz2, item.keys.elementAt(6), item[item.keys.elementAt(6)]!);
+                        break;
+                      default:
+                        alerta('Opção inválida', 'Deve-se selecionar uma operação!');
+                    }
+                  },
                   child: const Text(
                     'Calcular',
                     style: TextStyle(color: Colors.black),
@@ -301,13 +323,13 @@ class _HomePageState extends State<HomePage> {
                     ),
                   );
 
-                  Matrix matrix = Matrix(rows, columns, elements);
+                  Matriz matriz = Matriz(rows, columns, elements);
 
                   setState(() {
                     if (containerIndex == 0) {
-                      matrix1 = matrix;
+                      matriz1 = matriz;
                     } else {
-                      matrix2 = matrix;
+                      matriz2 = matriz;
                     }
                   });
 
@@ -441,14 +463,14 @@ class _HomePageState extends State<HomePage> {
     }
 
     //CONTAINER COM AS MATRIZES
-    Widget buildMatrixContainer(int containerIndex, Matrix? matrix) {
+    Widget buildMatrixContainer(int containerIndex, Matriz? matrix) {
       List<DataColumn> _buildColumns(int columnCount) {
         return List.generate(
           columnCount,
-              (index) => DataColumn(
+          (index) => DataColumn(
             label: Text(
               'C$index',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
         );
@@ -461,7 +483,7 @@ class _HomePageState extends State<HomePage> {
               return DataCell(
                 Text(
                   element.toString(),
-                  style: TextStyle(fontFamily: 'RobotoMono'),
+                  style: const TextStyle(fontFamily: 'RobotoMono'),
                 ),
               );
             }).toList(),
@@ -495,32 +517,30 @@ class _HomePageState extends State<HomePage> {
           child: Center(
             child: matrix != null
                 ? Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Matriz ${containerIndex + 1}',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 8),
-                DataTable(
-                  columns: _buildColumns(matrix.columns),
-                  rows: _buildRows(matrix.elements),
-                  columnSpacing: 3,
-                  dataRowHeight: 24,
-                  headingRowHeight: 0,
-
-                ),
-              ],
-            )
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Matriz ${containerIndex + 1}',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      DataTable(
+                        columns: _buildColumns(matrix.columns),
+                        rows: _buildRows(matrix.elements),
+                        columnSpacing: 3,
+                        dataRowHeight: 24,
+                        headingRowHeight: 0,
+                      ),
+                    ],
+                  )
                 : Text(
-              'Clique para adicionar a\nMatriz ${containerIndex + 1}',
-              textAlign: TextAlign.center,
-            ),
+                    'Clique para adicionar a\nMatriz ${containerIndex + 1}',
+                    textAlign: TextAlign.center,
+                  ),
           ),
         ),
       );
     }
-
 
     return Scaffold(
       backgroundColor: const Color.fromRGBO(245, 245, 245, 1),
@@ -551,8 +571,8 @@ portanto, não é necessário especificar as propriedades top, bottom, left e ri
                     Row(
                       //matrizes
                       children: [
-                        buildMatrixContainer(0, matrix1),
-                        buildMatrixContainer(1, matrix2),
+                        buildMatrixContainer(0, matriz1),
+                        buildMatrixContainer(1, matriz2),
                       ],
                     ),
                   ],
@@ -620,7 +640,9 @@ portanto, não é necessário especificar as propriedades top, bottom, left e ri
   }
 
   Text formatMatrixRow(List<int> row) {
-    final maxLength = row.map((element) => element.toString().length).reduce((a, b) => a > b ? a : b);
+    final maxLength = row
+        .map((element) => element.toString().length)
+        .reduce((a, b) => a > b ? a : b);
 
     final formattedRow = row.map((element) {
       final formattedElement = element.toString().padLeft(maxLength);
@@ -640,5 +662,42 @@ portanto, não é necessário especificar as propriedades top, bottom, left e ri
     );
   }
 
+  void operacao(Matriz? matriz1, Matriz? matriz2, int chave, String valor) {
+    if (matriz1 == null && matriz2 == null && (chave == 5 || chave == 6)) {
+      return alerta('Formato inválido', 'Deve-se preencher pelo menos uma matriz para realizar a ${valor.toLowerCase()}!');
+    } else if ((matriz1 == null || matriz2 == null || (matriz1 == null && matriz2 == null)) && (chave != 5 && chave != 6)) {
+      return alerta('Formato inválido', 'Deve-se preencher ambas matrizes para realizar a ${valor.toLowerCase()}!');
+    }
+  }
 
+  void alerta(String titulo, String mensagem) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              const Icon(
+                Icons.warning,
+                color: Colors.amber,
+                size: 36,
+              ),
+              const SizedBox(width: 8),
+              Text(titulo),
+            ],
+          ),
+          content: Text(mensagem),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pop(); // Fechar o popup de alerta
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
