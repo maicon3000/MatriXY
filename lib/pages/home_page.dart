@@ -442,6 +442,33 @@ class _HomePageState extends State<HomePage> {
 
     //CONTAINER COM AS MATRIZES
     Widget buildMatrixContainer(int containerIndex, Matrix? matrix) {
+      List<DataColumn> _buildColumns(int columnCount) {
+        return List.generate(
+          columnCount,
+              (index) => DataColumn(
+            label: Text(
+              'C$index',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+        );
+      }
+
+      List<DataRow> _buildRows(List<List<int>> elements) {
+        return elements.map((row) {
+          return DataRow(
+            cells: row.map((element) {
+              return DataCell(
+                Text(
+                  element.toString(),
+                  style: TextStyle(fontFamily: 'RobotoMono'),
+                ),
+              );
+            }).toList(),
+          );
+        }).toList();
+      }
+
       return InkWell(
         onTap: () {
           openMatrixDialog(containerIndex);
@@ -468,24 +495,32 @@ class _HomePageState extends State<HomePage> {
           child: Center(
             child: matrix != null
                 ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Matriz ${containerIndex + 1}',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      for (var row in matrix.elements) Text(row.join('  ')),
-                    ],
-                  )
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Matriz ${containerIndex + 1}',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                DataTable(
+                  columns: _buildColumns(matrix.columns),
+                  rows: _buildRows(matrix.elements),
+                  columnSpacing: 3,
+                  dataRowHeight: 24,
+                  headingRowHeight: 0,
+
+                ),
+              ],
+            )
                 : Text(
-                    'Clique para adicionar a\nMatriz ${containerIndex + 1}',
-                    textAlign: TextAlign.center,
-                  ),
+              'Clique para adicionar a\nMatriz ${containerIndex + 1}',
+              textAlign: TextAlign.center,
+            ),
           ),
         ),
       );
     }
+
 
     return Scaffold(
       backgroundColor: const Color.fromRGBO(245, 245, 245, 1),
@@ -583,4 +618,27 @@ portanto, não é necessário especificar as propriedades top, bottom, left e ri
       ),
     );
   }
+
+  Text formatMatrixRow(List<int> row) {
+    final maxLength = row.map((element) => element.toString().length).reduce((a, b) => a > b ? a : b);
+
+    final formattedRow = row.map((element) {
+      final formattedElement = element.toString().padLeft(maxLength);
+      return TextSpan(
+        text: formattedElement,
+        style: const TextStyle(
+          fontFamily: 'RobotoMono',
+          fontSize: 8, // Defina o tamanho de fonte desejado
+        ),
+      );
+    }).toList();
+
+    return Text.rich(
+      TextSpan(
+        children: formattedRow,
+      ),
+    );
+  }
+
+
 }
