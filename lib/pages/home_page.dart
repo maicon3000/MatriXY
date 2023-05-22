@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
-import '../matrix/matrix.dart';
+import '../matrix/matriz.dart';
+import 'package:lottie/lottie.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -168,15 +171,17 @@ class _HomePageState extends State<HomePage> {
                         selectedOption = newValue;
                       });
                     },
-                    items: item.entries.map<DropdownMenuItem<String>>(
+                    items: item.entries
+                        .map<DropdownMenuItem<String>>(
                           (entry) => DropdownMenuItem<String>(
-                        value: entry.value,
-                        child: Text(
-                          entry.value,
-                          style: const TextStyle(color: Colors.black),
-                        ),
-                      ),
-                    ).toList(),
+                            value: entry.value,
+                            child: Text(
+                              entry.value,
+                              style: const TextStyle(color: Colors.black),
+                            ),
+                          ),
+                        )
+                        .toList(),
                   ),
                 ),
               ),
@@ -201,25 +206,32 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     switch (selectedOption) {
                       case 'Adição':
-                        operacao(matriz1, matriz2, item.keys.elementAt(1), item[item.keys.elementAt(1)]!);
+                        operacao(matriz1, matriz2, item.keys.elementAt(1),
+                            item[item.keys.elementAt(1)]!);
                         break;
                       case 'Subtração':
-                        operacao(matriz1, matriz2, item.keys.elementAt(2), item[item.keys.elementAt(2)]!);
+                        operacao(matriz1, matriz2, item.keys.elementAt(2),
+                            item[item.keys.elementAt(2)]!);
                         break;
                       case 'Multiplicação':
-                        operacao(matriz1, matriz2, item.keys.elementAt(3), item[item.keys.elementAt(3)]!);
+                        operacao(matriz1, matriz2, item.keys.elementAt(3),
+                            item[item.keys.elementAt(3)]!);
                         break;
                       case 'Divisão':
-                        operacao(matriz1, matriz2, item.keys.elementAt(4), item[item.keys.elementAt(4)]!);
+                        operacao(matriz1, matriz2, item.keys.elementAt(4),
+                            item[item.keys.elementAt(4)]!);
                         break;
                       case 'Transposição':
-                        operacao(matriz1, matriz2, item.keys.elementAt(5), item[item.keys.elementAt(5)]!);
+                        operacao(matriz1, matriz2, item.keys.elementAt(5),
+                            item[item.keys.elementAt(5)]!);
                         break;
                       case 'Inversão':
-                        operacao(matriz1, matriz2, item.keys.elementAt(6), item[item.keys.elementAt(6)]!);
+                        operacao(matriz1, matriz2, item.keys.elementAt(6),
+                            item[item.keys.elementAt(6)]!);
                         break;
                       default:
-                        alerta('Opção inválida', 'Deve-se selecionar uma operação!');
+                        alerta('Opção inválida',
+                            'Deve-se selecionar uma operação!');
                     }
                   },
                   child: const Text(
@@ -237,6 +249,7 @@ class _HomePageState extends State<HomePage> {
     //DIALOGO DOS ELEMENTOS
     void openElementsDialog(int containerIndex, int rows, int columns) {
       showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (context) {
           List<List<TextEditingController>> controllers = List.generate(
@@ -346,6 +359,7 @@ class _HomePageState extends State<HomePage> {
     //DIALOGO DO TAMANHO DA MATRIZ
     void openMatrixDialog(int containerIndex) {
       showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (context) {
           return AlertDialog(
@@ -664,14 +678,66 @@ portanto, não é necessário especificar as propriedades top, bottom, left e ri
 
   void operacao(Matriz? matriz1, Matriz? matriz2, int chave, String valor) {
     if (matriz1 == null && matriz2 == null && (chave == 5 || chave == 6)) {
-      return alerta('Formato inválido', 'Deve-se preencher pelo menos uma matriz para realizar a ${valor.toLowerCase()}!');
-    } else if ((matriz1 == null || matriz2 == null || (matriz1 == null && matriz2 == null)) && (chave != 5 && chave != 6)) {
-      return alerta('Formato inválido', 'Deve-se preencher ambas matrizes para realizar a ${valor.toLowerCase()}!');
+      return alerta('Formato inválido',
+          'Deve-se preencher pelo menos uma matriz para realizar a ${valor.toLowerCase()}!');
+    } else if ((matriz1 == null || matriz2 == null) &&
+        (chave != 5 && chave != 6)) {
+      return alerta('Formato inválido',
+          'Deve-se preencher ambas matrizes para realizar a ${valor.toLowerCase()}!');
+    }
+
+    if (chave == 1 && temMesmaEstrutura(matriz1, matriz2)) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          Future.delayed(const Duration(milliseconds: 4500), () {
+            Navigator.of(context).pop();
+            // Continue com o cálculo aqui
+          });
+
+          return Stack(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  // Impedir que o diálogo seja fechado quando tocar fora da área do conteúdo
+                },
+                child: Container(
+                  color: Colors.transparent,
+                ),
+              ),
+              Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Lottie.network(
+                          'https://assets8.lottiefiles.com/packages/lf20_Q7WY7CfUco.json',
+                          width: 500,
+                          height: 500,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      alerta("Estrutura inválida!",
+          "Para cálculo de ${valor.toLowerCase()} as matrizes devem possuir a mesma estrutura");
     }
   }
 
   void alerta(String titulo, String mensagem) {
     showDialog(
+      barrierDismissible: false,
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -690,8 +756,7 @@ portanto, não é necessário especificar as propriedades top, bottom, left e ri
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context)
-                    .pop(); // Fechar o popup de alerta
+                Navigator.of(context).pop();
               },
               child: const Text('OK'),
             ),
@@ -699,5 +764,14 @@ portanto, não é necessário especificar as propriedades top, bottom, left e ri
         );
       },
     );
+  }
+
+  bool temMesmaEstrutura(Matriz? matriz1, Matriz? matriz2) {
+    if (matriz1?.rows != matriz2?.rows) {
+      return false;
+    } else if (matriz1?.columns != matriz2?.columns) {
+      return false;
+    }
+    return true;
   }
 }
