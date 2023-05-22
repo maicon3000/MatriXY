@@ -532,6 +532,7 @@ class _HomePageState extends State<HomePage> {
             child: matrix != null
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
                         'Matriz ${containerIndex + 1}',
@@ -686,12 +687,13 @@ portanto, não é necessário especificar as propriedades top, bottom, left e ri
           'Deve-se preencher ambas matrizes para realizar a ${valor.toLowerCase()}!');
     }
 
+    //CALCULO PARA QUANDO SELECIONAR ADIÇÃO
     if (chave == 1 && temMesmaEstrutura(matriz1, matriz2)) {
       showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          Future.delayed(const Duration(milliseconds: 4500), () {
+          Future.delayed(const Duration(milliseconds: 5000), () {
             Navigator.of(context).pop();
             // Continue com o cálculo aqui
           });
@@ -715,9 +717,9 @@ portanto, não é necessário especificar as propriedades top, bottom, left e ri
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Lottie.network(
-                          'https://assets8.lottiefiles.com/packages/lf20_Q7WY7CfUco.json',
-                          width: 500,
-                          height: 500,
+                          'https://assets5.lottiefiles.com/packages/lf20_awP420Zf8l.json',
+                          width: 300,
+                          height: 300,
                           fit: BoxFit.contain,
                         ),
                       ),
