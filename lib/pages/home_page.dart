@@ -688,7 +688,7 @@ class _HomePageState extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const Text(
-                        'Matriz',
+                        'Matriz X+Y',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
