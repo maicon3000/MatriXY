@@ -206,27 +206,27 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     switch (selectedOption) {
                       case 'Adição':
-                        operacao(matriz1, matriz2, item.keys.elementAt(1),
+                        operacao(matriz1!, matriz2!, item.keys.elementAt(1),
                             item[item.keys.elementAt(1)]!);
                         break;
                       case 'Subtração':
-                        operacao(matriz1, matriz2, item.keys.elementAt(2),
+                        operacao(matriz1!, matriz2!, item.keys.elementAt(2),
                             item[item.keys.elementAt(2)]!);
                         break;
                       case 'Multiplicação':
-                        operacao(matriz1, matriz2, item.keys.elementAt(3),
+                        operacao(matriz1!, matriz2!, item.keys.elementAt(3),
                             item[item.keys.elementAt(3)]!);
                         break;
                       case 'Divisão':
-                        operacao(matriz1, matriz2, item.keys.elementAt(4),
+                        operacao(matriz1!, matriz2!, item.keys.elementAt(4),
                             item[item.keys.elementAt(4)]!);
                         break;
                       case 'Transposição':
-                        operacao(matriz1, matriz2, item.keys.elementAt(5),
+                        operacao(matriz1!, matriz2!, item.keys.elementAt(5),
                             item[item.keys.elementAt(5)]!);
                         break;
                       case 'Inversão':
-                        operacao(matriz1, matriz2, item.keys.elementAt(6),
+                        operacao(matriz1!, matriz2!, item.keys.elementAt(6),
                             item[item.keys.elementAt(6)]!);
                         break;
                       default:
@@ -477,34 +477,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     //CONTAINER COM AS MATRIZES
-    Widget buildMatrixContainer(int containerIndex, Matriz? matrix) {
-      List<DataColumn> _buildColumns(int columnCount) {
-        return List.generate(
-          columnCount,
-          (index) => DataColumn(
-            label: Text(
-              'C$index',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-        );
-      }
-
-      List<DataRow> _buildRows(List<List<int>> elements) {
-        return elements.map((row) {
-          return DataRow(
-            cells: row.map((element) {
-              return DataCell(
-                Text(
-                  element.toString(),
-                  style: const TextStyle(fontFamily: 'RobotoMono'),
-                ),
-              );
-            }).toList(),
-          );
-        }).toList();
-      }
-
+    Widget buildMatrixContainer(int containerIndex, Matriz? matriz) {
       return InkWell(
         onTap: () {
           openMatrixDialog(containerIndex);
@@ -529,19 +502,19 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           child: Center(
-            child: matrix != null
+            child: matriz != null
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        'Matriz ${containerIndex + 1}',
+                        'Matriz ${(containerIndex + 1) == 1 ? 'X' : 'Y'}',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 8),
                       DataTable(
-                        columns: _buildColumns(matrix.columns),
-                        rows: _buildRows(matrix.elements),
+                        columns: _buildColumns(matriz.columns),
+                        rows: _buildRows(matriz.elements),
                         columnSpacing: 3,
                         dataRowHeight: 24,
                         headingRowHeight: 0,
@@ -549,7 +522,7 @@ class _HomePageState extends State<HomePage> {
                     ],
                   )
                 : Text(
-                    'Clique para adicionar a\nMatriz ${containerIndex + 1}',
+                    'Clique para adicionar a\nMatriz ${(containerIndex + 1) == 1 ? 'X' : 'Y'}',
                     textAlign: TextAlign.center,
                   ),
           ),
@@ -569,11 +542,6 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Stack(
                   children: [
-/*Quanto ao uso do top, bottom, left e right em Positioned, essas propriedades são usadas para definir a
-posição de um widget filho dentro do Stack, especificando as distâncias a partir das bordas do Stack.
-No entanto, ao usar o Positioned.fill, o widget filho ocupará todo o espaço disponível dentro do Stack,
-portanto, não é necessário especificar as propriedades top, bottom, left e right.
-*/
                     Positioned.fill(
                       child: Align(
                         alignment: Alignment.bottomCenter,
@@ -654,7 +622,7 @@ portanto, não é necessário especificar as propriedades top, bottom, left e ri
     );
   }
 
-  Text formatMatrixRow(List<int> row) {
+  Text formatMatrizRow(List<int> row) {
     final maxLength = row
         .map((element) => element.toString().length)
         .reduce((a, b) => a > b ? a : b);
@@ -677,7 +645,7 @@ portanto, não é necessário especificar as propriedades top, bottom, left e ri
     );
   }
 
-  void operacao(Matriz? matriz1, Matriz? matriz2, int chave, String valor) {
+  void operacao(Matriz matriz1, Matriz matriz2, int chave, String valor) {
     if (matriz1 == null && matriz2 == null && (chave == 5 || chave == 6)) {
       return alerta('Formato inválido',
           'Deve-se preencher pelo menos uma matriz para realizar a ${valor.toLowerCase()}!');
@@ -695,7 +663,58 @@ portanto, não é necessário especificar as propriedades top, bottom, left e ri
         builder: (BuildContext context) {
           Future.delayed(const Duration(milliseconds: 5000), () {
             Navigator.of(context).pop();
+
             // Continue com o cálculo aqui
+            Matriz matriz = matriz1.somar(matriz2);
+
+            showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Row(
+                    children: const [
+                      Icon(
+                        Icons.verified,
+                        color: Colors.green,
+                        size: 36,
+                      ),
+                      SizedBox(width: 8),
+                      Text('Resultado:'),
+                    ],
+                  ),
+                  content: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Matriz',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      DataTable(
+                        columns: _buildColumns(matriz.columns),
+                        rows: _buildRows(matriz.elements),
+                        columnSpacing: 3,
+                        dataRowHeight: 24,
+                        headingRowHeight: 0,
+                      ),
+                    ],
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('OK'),
+                    ),
+                  ],
+                );
+              },
+            );
+
+
+
           });
 
           return Stack(
@@ -735,6 +754,30 @@ portanto, não é necessário especificar as propriedades top, bottom, left e ri
       alerta("Estrutura inválida!",
           "Para cálculo de ${valor.toLowerCase()} as matrizes devem possuir a mesma estrutura");
     }
+  }
+
+  List<DataColumn> _buildColumns(int? columnCount) {
+    return List.generate(
+      columnCount!,
+          (index) => const DataColumn(
+        label: Text(''),
+      ),
+    );
+  }
+
+  List<DataRow> _buildRows(List<List<int>> elements) {
+    return elements.map((row) {
+      return DataRow(
+        cells: row.map((element) {
+          return DataCell(
+            Text(
+              element.toString(),
+              style: const TextStyle(fontFamily: 'RobotoMono'),
+            ),
+          );
+        }).toList(),
+      );
+    }).toList();
   }
 
   void alerta(String titulo, String mensagem) {
