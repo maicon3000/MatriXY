@@ -22,9 +22,9 @@ class _HomePageState extends State<HomePage> {
     1: 'Adição',
     2: 'Subtração',
     3: 'Multiplicação',
-    4: 'Divisão',
-    5: 'Transposição',
-    6: 'Inversão'
+    4: 'Transposição',
+    5: 'Inversão',
+    6: 'Determinante'
   };
 
   String? selectedOption;
@@ -206,28 +206,28 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     switch (selectedOption) {
                       case 'Adição':
-                        operacao(matriz1!, matriz2!, item.keys.elementAt(1),
+                        operacao(matriz1, matriz2, item.keys.elementAt(1),
                             item[item.keys.elementAt(1)]!);
                         break;
                       case 'Subtração':
-                        operacao(matriz1!, matriz2!, item.keys.elementAt(2),
+                        operacao(matriz1, matriz2, item.keys.elementAt(2),
                             item[item.keys.elementAt(2)]!);
                         break;
                       case 'Multiplicação':
-                        operacao(matriz1!, matriz2!, item.keys.elementAt(3),
+                        operacao(matriz1, matriz2, item.keys.elementAt(3),
                             item[item.keys.elementAt(3)]!);
                         break;
-                      case 'Divisão':
-                        operacao(matriz1!, matriz2!, item.keys.elementAt(4),
-                            item[item.keys.elementAt(4)]!);
-                        break;
                       case 'Transposição':
-                        operacao(matriz1!, matriz2!, item.keys.elementAt(5),
+                        operacao(matriz1, matriz2, item.keys.elementAt(4),
                             item[item.keys.elementAt(5)]!);
                         break;
                       case 'Inversão':
-                        operacao(matriz1!, matriz2!, item.keys.elementAt(6),
+                        operacao(matriz1, matriz2, item.keys.elementAt(5),
                             item[item.keys.elementAt(6)]!);
+                        break;
+                      case 'Determinante':
+                        operacao(matriz1, matriz2, item.keys.elementAt(6),
+                            item[item.keys.elementAt(4)]!);
                         break;
                       default:
                         alerta('Opção inválida',
@@ -507,9 +507,53 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        'Matriz ${(containerIndex + 1) == 1 ? 'X' : 'Y'}',
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      Container(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 27.0),
+                                child: Text(
+                                  'Matriz ${(containerIndex + 1) == 1 ? 'X' : 'Y'}',
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  if (containerIndex == 0) {
+                                    matriz1 = null;
+                                  } else {
+                                    matriz2 = null;
+                                  }
+                                });
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 8.0),
+                                child: Container(
+                                  width: 19,
+                                  height: 19,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: const Color.fromRGBO(235, 64, 52, 0.7),
+                                      width: 2.0,
+                                    ),
+                                  ),
+                                  child: const Icon(
+                                    Icons.close,
+                                    color: Colors.white,
+                                    size: 15,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 8),
                       DataTable(
@@ -645,14 +689,16 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void operacao(Matriz matriz1, Matriz matriz2, int chave, String valor) {
+  void operacao(Matriz? matriz1, Matriz? matriz2, int chave, String valor) {
     if (matriz1 == null && matriz2 == null && (chave == 5 || chave == 6)) {
       return alerta('Formato inválido',
-          'Deve-se preencher pelo menos uma matriz para realizar a ${valor.toLowerCase()}!');
+          'Deve-se preencher pelo menos uma matriz para realizar a ${valor
+              .toLowerCase()}!');
     } else if ((matriz1 == null || matriz2 == null) &&
-        (chave != 5 && chave != 6)) {
+        (chave != 4 && chave != 5 && chave != 6)) {
       return alerta('Formato inválido',
-          'Deve-se preencher ambas matrizes para realizar a ${valor.toLowerCase()}!');
+          'Deve-se preencher ambas matrizes para realizar a ${valor
+              .toLowerCase()}!');
     }
 
     //CALCULO PARA QUANDO SELECIONAR ADIÇÃO
@@ -663,91 +709,112 @@ class _HomePageState extends State<HomePage> {
         builder: (BuildContext context) {
           Future.delayed(const Duration(milliseconds: 5000), () {
             Navigator.of(context).pop();
-
+            String titulo = 'Matriz X+Y';
             // Continue com o cálculo aqui
-            Matriz matriz = matriz1.somar(matriz2);
-
-            showDialog(
-              barrierDismissible: false,
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Row(
-                    children: const [
-                      Icon(
-                        Icons.verified,
-                        color: Colors.green,
-                        size: 36,
-                      ),
-                      SizedBox(width: 8),
-                      Text('Resultado:'),
-                    ],
-                  ),
-                  content: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'Matriz X+Y',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      DataTable(
-                        columns: _buildColumns(matriz.columns),
-                        rows: _buildRows(matriz.elements),
-                        columnSpacing: 3,
-                        dataRowHeight: 24,
-                        headingRowHeight: 0,
-                      ),
-                    ],
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('OK'),
-                    ),
-                  ],
-                );
-              },
-            );
-
-
-
+            Matriz matriz = matriz1!.adicao(matriz2!);
+            resultado(matriz, titulo);
           });
 
-          return Stack(
-            children: [
-              GestureDetector(
-                onTap: () {
-                  // Impedir que o diálogo seja fechado quando tocar fora da área do conteúdo
-                },
-                child: Container(
-                  color: Colors.transparent,
-                ),
-              ),
-              Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Lottie.network(
-                          'https://assets5.lottiefiles.com/packages/lf20_awP420Zf8l.json',
-                          width: 300,
-                          height: 300,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          );
+          return carregarResultado();
+        },
+      );
+    } else if (chave == 2 && temMesmaEstrutura(matriz1, matriz2)) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          Future.delayed(const Duration(milliseconds: 5000), () {
+            Navigator.of(context).pop();
+            String titulo = 'Matriz X-Y';
+            // Continue com o cálculo aqui
+            Matriz matriz = matriz1!.subtracao(matriz2!);
+            resultado(matriz, titulo);
+          });
+
+          return carregarResultado();
+        },
+      );
+    } else if (chave == 3) {
+      if (temMesmaEstrutura(matriz1, matriz2)) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            Future.delayed(const Duration(milliseconds: 5000), () {
+              Navigator.of(context).pop();
+              String titulo = 'Matriz X*Y';
+              // Continue com o cálculo aqui
+              Matriz matriz = matriz1!.multiplicacaoPorElemento(matriz2!);
+              resultado(matriz, titulo);
+            });
+
+            return carregarResultado();
+          },
+        );
+      } else if (matriz1?.columns == matriz2?.rows) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            Future.delayed(const Duration(milliseconds: 5000), () {
+              Navigator.of(context).pop();
+              String titulo = 'Matriz X*Y';
+              // Continue com o cálculo aqui
+              Matriz matriz = matriz1!.multiplicacao(matriz2!);
+              resultado(matriz, titulo);
+            });
+
+            return carregarResultado();
+          },
+        );
+      } else if ((matriz1?.columns == 1 && matriz1?.rows == 1) || (matriz2?.columns == 1 && matriz2?.rows == 1)) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            Future.delayed(const Duration(milliseconds: 5000), () {
+              Navigator.of(context).pop();
+              String titulo = 'Matriz X*Y';
+              // Continue com o cálculo aqui
+              Matriz matriz;
+              if (matriz1?.columns == 1 && matriz1?.rows == 1) {
+                int escalar = matriz1!.elements[0][0];
+                matriz = matriz2!.multiplicacaoPorEscalar(escalar);
+              } else {
+                int escalar = matriz2!.elements[0][0];
+                matriz = matriz1!.multiplicacaoPorEscalar(escalar);
+              }
+
+              resultado(matriz, titulo);
+            });
+
+            return carregarResultado();
+          },
+        );
+      } else {
+        alerta("Estrutura inválida!",
+            "Para cálculo de ${valor.toLowerCase()} as matrizes devem possuir a mesma estrutura ou o número de colunas da matriz X igual ao número de linhas da matriz Y (vice-versa) ou uma das matrizes multiplicadas por um valor único (escalar)");
+      }
+    } else if (chave == 6) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          Future.delayed(const Duration(milliseconds: 5000), () {
+            Navigator.of(context).pop();
+            String titulo = '|Matriz|';
+            // Continue com o cálculo aqui
+            Matriz matriz;
+            if (matriz1 != null && matriz2 == null) {
+              matriz = matriz1.determinante(matriz1.elements);
+            } else /*if (matriz1 == null && matriz2 != null)*/ {
+              matriz = matriz2!.determinante(matriz2!.elements);
+            }
+
+            resultado(matriz, titulo);
+          });
+
+          return carregarResultado();
         },
       );
     } else {
@@ -818,5 +885,92 @@ class _HomePageState extends State<HomePage> {
       return false;
     }
     return true;
+  }
+
+  bool colunaMatriz1IgualLinhaMatriz2(Matriz matriz1, Matriz matriz2) {
+    if (matriz1?.columns == matriz2?.rows) return true;
+    return false;
+  }
+
+  void resultado(Matriz? matriz, String titulo) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Row(
+            children: const [
+              Icon(
+                Icons.verified,
+                color: Colors.green,
+                size: 36,
+              ),
+              SizedBox(width: 8),
+              Text('Resultado:'),
+            ],
+          ),
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                titulo,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              DataTable(
+                columns: _buildColumns(matriz!.columns),
+                rows: _buildRows(matriz!.elements),
+                columnSpacing: 3,
+                dataRowHeight: 24,
+                headingRowHeight: 0,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Stack carregarResultado() {
+    return Stack(
+      children: [
+        GestureDetector(
+          onTap: () {
+            // Impedir que o diálogo seja fechado quando tocar fora da área do conteúdo
+          },
+          child: Container(
+            color: Colors.transparent,
+          ),
+        ),
+        Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Lottie.network(
+                    'https://assets5.lottiefiles.com/packages/lf20_awP420Zf8l.json',
+                    width: 300,
+                    height: 300,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }
