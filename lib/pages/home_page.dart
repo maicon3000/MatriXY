@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:matrixy/pages/carregamento_calc.dart';
 import '../matrix/matriz.dart';
 import 'package:lottie/lottie.dart';
 
@@ -12,11 +13,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  //INSTANCIANDO DUAS MATRIZES
   Matriz? matriz1;
   Matriz? matriz2;
 
-  //DropdowButton DE CALCULAR
   Map<int, String> item = {
     0: 'Selecione',
     1: 'Adição',
@@ -29,18 +28,16 @@ class _HomePageState extends State<HomePage> {
 
   String? selectedOption;
 
-  //DropdowButton DO PRIMEIRO DIÁLOGO
   List<int> row = [1, 2, 3, 4, 5];
   List<int> column = [1, 2, 3, 4, 5];
 
-  //PARA MUDAR INSTANTANEAMENTE O VALOR SELECIONADO NO DropdownMenuItem
   ValueNotifier<int?> selectedRows = ValueNotifier<int?>(1);
   ValueNotifier<int?> selectedColumns = ValueNotifier<int?>(1);
 
   @override
   Widget build(BuildContext context) {
-    //CADA TILE DO HISTORICO
 
+    //CADA TILE DO HISTORICO
     final myHistoricTile = GestureDetector(
       onTap: () {
         //ação ao clicar no card
@@ -101,8 +98,8 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
-    //APPBAR
 
+    //APPBAR
     final myAppBarContainer = Container(
       //'appbar'
       height: MediaQuery.of(context).size.height * 0.13,
@@ -131,8 +128,8 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
-    //CONTAINER DE ESCOLHER OPERAÇÃO
 
+    //CONTAINER DE ESCOLHER OPERAÇÃO
     final myBlackContainer = Container(
       // container preto
       height: MediaQuery.of(context).size.height * 0.14,
@@ -666,163 +663,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Text formatMatrizRow(List<int> row) {
-    final maxLength = row
-        .map((element) => element.toString().length)
-        .reduce((a, b) => a > b ? a : b);
-
-    final formattedRow = row.map((element) {
-      final formattedElement = element.toString().padLeft(maxLength);
-      return TextSpan(
-        text: formattedElement,
-        style: const TextStyle(
-          fontFamily: 'RobotoMono',
-          fontSize: 8, // Defina o tamanho de fonte desejado
-        ),
-      );
-    }).toList();
-
-    return Text.rich(
-      TextSpan(
-        children: formattedRow,
-      ),
-    );
-  }
-
-  void operacao(Matriz? matriz1, Matriz? matriz2, int chave, String valor) {
-    if (matriz1 == null && matriz2 == null && (chave == 5 || chave == 6)) {
-      return alerta('Formato inválido',
-          'Deve-se preencher pelo menos uma matriz para realizar a ${valor
-              .toLowerCase()}!');
-    } else if ((matriz1 == null || matriz2 == null) &&
-        (chave != 4 && chave != 5 && chave != 6)) {
-      return alerta('Formato inválido',
-          'Deve-se preencher ambas matrizes para realizar a ${valor
-              .toLowerCase()}!');
-    }
-
-    //CALCULO PARA QUANDO SELECIONAR ADIÇÃO
-    if (chave == 1 && temMesmaEstrutura(matriz1, matriz2)) {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          Future.delayed(const Duration(milliseconds: 5000), () {
-            Navigator.of(context).pop();
-            String titulo = 'Matriz X+Y';
-            // Continue com o cálculo aqui
-            Matriz matriz = matriz1!.adicao(matriz2!);
-            resultado(matriz, titulo);
-          });
-
-          return carregarResultado();
-        },
-      );
-    } else if (chave == 2 && temMesmaEstrutura(matriz1, matriz2)) {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          Future.delayed(const Duration(milliseconds: 5000), () {
-            Navigator.of(context).pop();
-            String titulo = 'Matriz X-Y';
-            // Continue com o cálculo aqui
-            Matriz matriz = matriz1!.subtracao(matriz2!);
-            resultado(matriz, titulo);
-          });
-
-          return carregarResultado();
-        },
-      );
-    } else if (chave == 3) {
-      if (temMesmaEstrutura(matriz1, matriz2)) {
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            Future.delayed(const Duration(milliseconds: 5000), () {
-              Navigator.of(context).pop();
-              String titulo = 'Matriz X*Y';
-              // Continue com o cálculo aqui
-              Matriz matriz = matriz1!.multiplicacaoPorElemento(matriz2!);
-              resultado(matriz, titulo);
-            });
-
-            return carregarResultado();
-          },
-        );
-      } else if (matriz1?.columns == matriz2?.rows) {
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            Future.delayed(const Duration(milliseconds: 5000), () {
-              Navigator.of(context).pop();
-              String titulo = 'Matriz X*Y';
-              // Continue com o cálculo aqui
-              Matriz matriz = matriz1!.multiplicacao(matriz2!);
-              resultado(matriz, titulo);
-            });
-
-            return carregarResultado();
-          },
-        );
-      } else if ((matriz1?.columns == 1 && matriz1?.rows == 1) || (matriz2?.columns == 1 && matriz2?.rows == 1)) {
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            Future.delayed(const Duration(milliseconds: 5000), () {
-              Navigator.of(context).pop();
-              String titulo = 'Matriz X*Y';
-              // Continue com o cálculo aqui
-              Matriz matriz;
-              if (matriz1?.columns == 1 && matriz1?.rows == 1) {
-                int escalar = matriz1!.elements[0][0];
-                matriz = matriz2!.multiplicacaoPorEscalar(escalar);
-              } else {
-                int escalar = matriz2!.elements[0][0];
-                matriz = matriz1!.multiplicacaoPorEscalar(escalar);
-              }
-
-              resultado(matriz, titulo);
-            });
-
-            return carregarResultado();
-          },
-        );
-      } else {
-        alerta("Estrutura inválida!",
-            "Para cálculo de ${valor.toLowerCase()} as matrizes devem possuir a mesma estrutura ou o número de colunas da matriz X igual ao número de linhas da matriz Y (vice-versa) ou uma das matrizes multiplicadas por um valor único (escalar)");
-      }
-    } else if (chave == 6) {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          Future.delayed(const Duration(milliseconds: 5000), () {
-            Navigator.of(context).pop();
-            String titulo = '|Matriz|';
-            // Continue com o cálculo aqui
-            Matriz matriz;
-            if (matriz1 != null && matriz2 == null) {
-              matriz = matriz1.determinante(matriz1.elements);
-            } else /*if (matriz1 == null && matriz2 != null)*/ {
-              matriz = matriz2!.determinante(matriz2!.elements);
-            }
-
-            resultado(matriz, titulo);
-          });
-
-          return carregarResultado();
-        },
-      );
-    } else {
-      alerta("Estrutura inválida!",
-          "Para cálculo de ${valor.toLowerCase()} as matrizes devem possuir a mesma estrutura");
-    }
-  }
-
   List<DataColumn> _buildColumns(int? columnCount) {
     return List.generate(
       columnCount!,
@@ -847,6 +687,202 @@ class _HomePageState extends State<HomePage> {
     }).toList();
   }
 
+  void operacao(Matriz? matriz1, Matriz? matriz2, int chave, String valor) {
+    if (matriz1 == null && matriz2 == null && (chave == 5 || chave == 6)) {
+      return alerta('Formato inválido',
+          'Deve-se preencher pelo menos uma matriz para realizar a ${valor
+              .toLowerCase()}!');
+    } else if ((matriz1 == null || matriz2 == null) &&
+        (chave != 4 && chave != 5 && chave != 6)) {
+      return alerta('Formato inválido',
+          'Deve-se preencher ambas matrizes para realizar a ${valor
+              .toLowerCase()}!');
+    }
+
+    Matriz matriz;
+    String titulo;
+    List<Matriz> matrizes = [];
+    List<String> titulos = [];
+
+    //CALCULO PARA QUANDO SELECIONAR ADIÇÃO
+    if (chave == 1 && temMesmaEstrutura(matriz1, matriz2)) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          Future.delayed(const Duration(milliseconds: 5000), () {
+            Navigator.of(context).pop();
+            titulo = 'Matriz X+Y';
+            // Continue com o cálculo aqui
+            matriz = matriz1!.adicao(matriz2!);
+            matrizes.add(matriz);
+            titulos.add(titulo);
+            resultado(matrizes, titulos);
+
+          });
+
+          return CarragamentoCalc();
+        },
+      );
+    } else if (chave == 2 && temMesmaEstrutura(matriz1, matriz2)) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          Future.delayed(const Duration(milliseconds: 5000), () {
+            Navigator.of(context).pop();
+            titulo = 'Matriz X-Y';
+            // Continue com o cálculo aqui
+            matriz = matriz1!.subtracao(matriz2!);
+            matrizes.add(matriz);
+            titulos.add(titulo);
+            resultado(matrizes, titulos);
+          });
+
+          return CarragamentoCalc();
+        },
+      );
+    } else if (chave == 3) {
+      if (temMesmaEstrutura(matriz1, matriz2)) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            Future.delayed(const Duration(milliseconds: 5000), () {
+              Navigator.of(context).pop();
+              titulo = 'Matriz X*Y';
+              // Continue com o cálculo aqui
+              matriz = matriz1!.multiplicacaoPorElemento(matriz2!);
+              matrizes.add(matriz);
+              titulos.add(titulo);
+              resultado(matrizes, titulos);
+            });
+
+            return CarragamentoCalc();
+          },
+        );
+      } else if (matriz1?.columns == matriz2?.rows) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            Future.delayed(const Duration(milliseconds: 5000), () {
+              Navigator.of(context).pop();
+              titulo = 'Matriz X*Y';
+              // Continue com o cálculo aqui
+              matriz = matriz1!.multiplicacao(matriz2!);
+              matrizes.add(matriz);
+              titulos.add(titulo);
+              resultado(matrizes, titulos);
+            });
+
+            return CarragamentoCalc();
+          },
+        );
+      } else if ((matriz1?.columns == 1 && matriz1?.rows == 1) || (matriz2?.columns == 1 && matriz2?.rows == 1)) {
+        int escalar;
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            Future.delayed(const Duration(milliseconds: 5000), () {
+              Navigator.of(context).pop();
+              titulo = 'Matriz X*Y';
+              // Continue com o cálculo aqui
+              if (matriz1?.columns == 1 && matriz1?.rows == 1) {
+                escalar = matriz1!.elements[0][0];
+                matriz = matriz2!.multiplicacaoPorEscalar(escalar);
+              } else {
+                escalar = matriz2!.elements[0][0];
+                matriz = matriz1!.multiplicacaoPorEscalar(escalar);
+              }
+
+              matrizes.add(matriz);
+              titulos.add(titulo);
+              resultado(matrizes, titulos);
+            });
+
+            return CarragamentoCalc();
+          },
+        );
+      } else {
+        alerta("Estrutura inválida!",
+            "Para cálculo de ${valor.toLowerCase()} as matrizes devem possuir a mesma estrutura ou o número de colunas da matriz X igual ao número de linhas da matriz Y (vice-versa) ou uma das matrizes multiplicadas por um valor único (escalar)");
+      }
+    } else if (chave == 6) {
+        if (matriz1 != null && matriz2 != null &&
+            matriz1.rows == matriz1.columns &&
+            matriz2.rows == matriz2.columns) {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              Future.delayed(const Duration(milliseconds: 5000), () {
+                Navigator.of(context).pop();
+                titulo = '|Matriz X|';
+                matriz = matriz1.determinante(matriz1.elements);
+                matrizes.add(matriz);
+                titulos.add(titulo);
+
+                titulo = '|Matriz Y|';
+                matriz = matriz2.determinante(matriz2.elements);
+                matrizes.add(matriz);
+                titulos.add(titulo);
+                  //TO DO: Chamar o calculo para as duas matrizes
+                  //matriz = matriz2!.determinante(matriz2!.elements);
+                resultado(matrizes, titulos);
+              });
+
+              return CarragamentoCalc();
+            },
+          );
+      } else if (matriz1 != null && matriz2 == null &&
+          matriz1.rows == matriz1.columns) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            Future.delayed(const Duration(milliseconds: 5000), () {
+              Navigator.of(context).pop();
+              String titulo = '|Matriz X|';
+              Matriz matriz;
+              matriz = matriz1.determinante(matriz1.elements);
+              matrizes.add(matriz);
+              titulos.add(titulo);
+              resultado(matrizes, titulos);
+            });
+
+            return CarragamentoCalc();
+          },
+        );
+      } else if (matriz1 == null && matriz2 != null &&
+        matriz2.rows == matriz2.columns) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            Future.delayed(const Duration(milliseconds: 5000), () {
+              Navigator.of(context).pop();
+              titulo = '|Matriz Y|';
+              matriz = matriz2.determinante(matriz2.elements);
+              matrizes.add(matriz);
+              titulos.add(titulo);
+              resultado(matrizes, titulos);
+            });
+
+            return CarragamentoCalc();
+          },
+        );
+      } else {
+        alerta("Estrutura inválida!",
+           "Para cálculo de determinante a matriz deve ser quadrada");
+      }
+    } else {
+      alerta("Estrutura inválida!",
+          "Para cálculo de ${valor.toLowerCase()} as matrizes devem possuir a mesma estrutura");
+    }
+  }
+
   void alerta(String titulo, String mensagem) {
     showDialog(
       barrierDismissible: false,
@@ -855,10 +891,13 @@ class _HomePageState extends State<HomePage> {
         return AlertDialog(
           title: Row(
             children: [
-              const Icon(
-                Icons.warning,
-                color: Colors.amber,
-                size: 36,
+              Lottie.network(
+                'https://assets7.lottiefiles.com/packages/lf20_9s5vox93.json',
+                //https://assets1.lottiefiles.com/packages/lf20_0P6TnSO6YK.json
+                width: 70,
+                height: 70,
+                repeat: true,
+                fit: BoxFit.contain,
               ),
               const SizedBox(width: 8),
               Text(titulo),
@@ -888,11 +927,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   bool colunaMatriz1IgualLinhaMatriz2(Matriz matriz1, Matriz matriz2) {
-    if (matriz1?.columns == matriz2?.rows) return true;
+    if (matriz1.columns == matriz2.rows) return true;
     return false;
   }
 
-  void resultado(Matriz? matriz, String titulo) {
+  void resultado(List<Matriz?> matrizes, List<String> titulos) {
+    assert(matrizes.length <= 2 && titulos.length <= 2);
+
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -913,18 +954,24 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                titulo,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              DataTable(
-                columns: _buildColumns(matriz!.columns),
-                rows: _buildRows(matriz!.elements),
-                columnSpacing: 3,
-                dataRowHeight: 24,
-                headingRowHeight: 0,
-              ),
+              for (int i = 0; i < matrizes.length; i++)
+                Column(
+                  children: [
+                    Text(
+                      titulos[i],
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 8),
+                    DataTable(
+                      columns: _buildColumns(matrizes[i]!.columns),
+                      rows: _buildRows(matrizes[i]!.elements),
+                      columnSpacing: 3,
+                      dataRowHeight: 24,
+                      headingRowHeight: 0,
+                    ),
+                    if (i < matrizes.length - 1) const Divider(),
+                  ],
+                ),
             ],
           ),
           actions: [
@@ -940,37 +987,4 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Stack carregarResultado() {
-    return Stack(
-      children: [
-        GestureDetector(
-          onTap: () {
-            // Impedir que o diálogo seja fechado quando tocar fora da área do conteúdo
-          },
-          child: Container(
-            color: Colors.transparent,
-          ),
-        ),
-        Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Lottie.network(
-                    'https://assets5.lottiefiles.com/packages/lf20_awP420Zf8l.json',
-                    width: 300,
-                    height: 300,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
 }
