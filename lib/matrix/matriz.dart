@@ -1,7 +1,9 @@
+import 'package:hive/hive.dart';
+
 class Matriz {
-  final int rows;
-  final int columns;
-  final List<List<int>> elements;
+  int rows;
+  int columns;
+  List<List<int>> elements;
 
   Matriz(this.rows, this.columns, this.elements);
 
@@ -273,4 +275,51 @@ class Matriz {
     }
     return result;
   }
+}
+
+class MatrizAdapter extends TypeAdapter<Matriz> {
+  @override
+  Matriz read(BinaryReader reader) {
+    // Lógica para ler os dados do objeto Matriz
+    // e retornar uma instância de Matriz
+
+    // Exemplo de implementação:
+    int rows = reader.readInt(); // Ler o número de linhas da matriz
+    int cols = reader.readInt(); // Ler o número de colunas da matriz
+    List<List<int>> values = [];
+
+    for (int i = 0; i < rows; i++) {
+      List<int> row = [];
+      for (int j = 0; j < cols; j++) {
+        int value = reader.readInt(); // Ler os valores da matriz
+        row.add(value);
+      }
+      values.add(row);
+    }
+
+    return Matriz(
+      rows,
+      cols,
+      values,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, Matriz obj) {
+    // Lógica para escrever os dados do objeto Matriz no escritor
+
+    // Exemplo de implementação:
+    writer.writeInt(obj.rows); // Escrever o número de linhas da matriz
+    writer.writeInt(obj.columns); // Escrever o número de colunas da matriz
+
+    for (int i = 0; i < obj.rows; i++) {
+      for (int j = 0; j < obj.columns; j++) {
+        int value = obj.elements[i][j]; // Obter os valores da matriz
+        writer.writeInt(value); // Escrever os valores no escritor
+      }
+    }
+  }
+
+  @override
+  int get typeId => 1; // Identificador único para o adaptador da classe Matriz
 }

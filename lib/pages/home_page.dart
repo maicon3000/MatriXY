@@ -1,22 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:hive/hive.dart';
 import 'package:matrixy/pages/carregamento_calc.dart';
+import '../data/database.dart';
 import '../matrix/matriz.dart';
 import 'package:lottie/lottie.dart';
 
 class MatrixOperation {
   Matriz? matriz1;
   Matriz? matriz2;
-  String title;
-  Matriz result;
-  String icon;
+  String? title;
+  Matriz? result;
+  String? icon;
 
   MatrixOperation({
-    required this.matriz1,
-    required this.matriz2,
-    required this.title,
-    required this.result,
-    required this.icon,
+    this.matriz1,
+    this.matriz2,
+    this.title,
+    this.result,
+    this.icon,
   });
+}
+
+class MatrixOperationAdapter extends TypeAdapter<MatrixOperation> {
+  @override
+  MatrixOperation read(BinaryReader reader) {
+    Matriz? matriz1 = reader.read(); // Leia o objeto Matriz
+    Matriz? matriz2 = reader.read(); // Leia o objeto Matriz
+    String? title = reader.read(); // Leia a string
+    Matriz? result = reader.read(); // Leia o objeto Matriz
+    String? icon = reader.read(); // Leia a string
+
+    return MatrixOperation(
+      matriz1: matriz1,
+      matriz2: matriz2,
+      title: title,
+      result: result,
+      icon: icon,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, MatrixOperation obj) {
+    writer.write(obj.matriz1); // Escreva o objeto Matriz
+    writer.write(obj.matriz2); // Escreva o objeto Matriz
+    writer.write(obj.title); // Escreva a string
+    writer.write(obj.result); // Escreva o objeto Matriz
+    writer.write(obj.icon); // Escreva a string
+  }
+
+  @override
+  int get typeId => 0; // Identificador único para o adaptador
 }
 
 class HomePage extends StatefulWidget {
@@ -27,6 +61,29 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final _myBox = Hive.box('mybox');
+
+  HistoricDataBase db = HistoricDataBase();
+
+  @override //quando o app rodar pela primeira vez, checaremos:
+  void initState() {
+    //se abriu pela primeira vez, crie o padrao
+    if (_myBox.get('HISTORICLIST') == null) {
+      db.createInitialDate();
+    } else {
+      //ja existe informacao
+      db.loadData();
+    }
+    super.initState();
+  }
+
+  void deleteTile(int index) {
+    setState(() {
+      db.matrixHistory.removeAt(index);
+    });
+    db.updateDataBase();
+  }
+
   Matriz? matriz1;
   Matriz? matriz2;
 
@@ -427,7 +484,8 @@ class _HomePageState extends State<HomePage> {
     }
 
     //CONTAINER COM AS MATRIZES
-    Widget buildMatrixContainer(int containerIndex, Matriz? matriz) {
+    Widget buildMatrixContainer(
+        int containerIndex, Matriz? matriz, double left, double right) {
       return InkWell(
         onTap: () {
           openMatrixDialog(containerIndex);
@@ -435,8 +493,8 @@ class _HomePageState extends State<HomePage> {
         child: Container(
           width: MediaQuery.of(context).size.width * 0.5,
           height: MediaQuery.of(context).size.height * 0.24,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
               colors: [
                 Color.fromRGBO(155, 115, 61, 1),
                 Color.fromRGBO(253, 173, 65, 1),
@@ -445,10 +503,10 @@ class _HomePageState extends State<HomePage> {
               end: Alignment.bottomCenter,
             ),
             borderRadius: BorderRadius.only(
-              bottomRight: Radius.circular(15),
-              bottomLeft: Radius.circular(15),
-              topLeft: Radius.circular(30),
-              topRight: Radius.circular(15),
+              bottomRight: const Radius.circular(15),
+              bottomLeft: const Radius.circular(15),
+              topLeft: Radius.circular(left),
+              topRight: Radius.circular(right),
             ),
           ),
           child: Center(
@@ -550,8 +608,8 @@ class _HomePageState extends State<HomePage> {
                     Row(
                       //matrizes
                       children: [
-                        buildMatrixContainer(0, matriz1),
-                        buildMatrixContainer(1, matriz2),
+                        buildMatrixContainer(0, matriz1, 30, 15),
+                        buildMatrixContainer(1, matriz2, 15, 30),
                       ],
                     ),
                   ],
@@ -593,147 +651,159 @@ class _HomePageState extends State<HomePage> {
                       ),
                       Expanded(
                           child: ListView.builder(
-                        itemCount: matrixHistory.length,
+                        itemCount: db.matrixHistory.length,
                         itemBuilder: (context, index) {
-                          MatrixOperation operation = matrixHistory[index];
-                          return GestureDetector(
-                            child: Column(
+                          MatrixOperation operation = db.matrixHistory[index];
+                          return Slidable(
+                            endActionPane: ActionPane(
+                              motion: const StretchMotion(),
                               children: [
-                                Container(
-                                  decoration: const BoxDecoration(
-                                    border: Border(
-                                      top: BorderSide(
-                                        width: 2,
-                                        color: Color.fromRGBO(23, 23, 23, 1),
-                                      ),
-                                    ),
-                                    gradient: RadialGradient(
-                                      colors: [
-                                        Color.fromRGBO(16, 16, 16, 1),
-                                        Color.fromRGBO(7, 7, 7, 1),
-                                      ],
-                                      radius: 3,
-                                      center: Alignment.center,
-                                    ),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 18.0),
-                                        child: Image.asset(
-                                          operation.icon,
-                                          width: 30,
-                                          color: Colors.white,
+                                SlidableAction(
+                                  onPressed: (context) => deleteTile(index),
+                                  icon: Icons.delete,
+                                  backgroundColor: Colors.red,
+                                ),
+                              ],
+                            ),
+                            child: GestureDetector(
+                              child: Column(
+                                children: [
+                                  Container(
+                                    decoration: const BoxDecoration(
+                                      border: Border(
+                                        top: BorderSide(
+                                          width: 2,
+                                          color: Color.fromRGBO(23, 23, 23, 1),
                                         ),
                                       ),
-                                      const SizedBox(width: 10),
-                                      Expanded(
-                                        child: Padding(
+                                      gradient: RadialGradient(
+                                        colors: [
+                                          Color.fromRGBO(16, 16, 16, 1),
+                                          Color.fromRGBO(7, 7, 7, 1),
+                                        ],
+                                        radius: 3,
+                                        center: Alignment.center,
+                                      ),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Padding(
                                           padding: const EdgeInsets.symmetric(
-                                              vertical: 8.0),
-                                          child: Column(
+                                              horizontal: 18.0),
+                                          child: Image.asset(
+                                            operation.icon!,
+                                            width: 30,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 8.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  operation.title!,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: 12,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 4),
+                                                Text(
+                                                  'Matriz X: ${operation.matriz1}',
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w300,
+                                                    fontSize: 10,
+                                                    color: Color.fromRGBO(
+                                                        100, 92, 92, 1),
+                                                  ),
+                                                ),
+                                                Text(
+                                                  'Matriz Y: ${operation.matriz2}',
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w300,
+                                                    fontSize: 10,
+                                                    color: Color.fromRGBO(
+                                                        100, 92, 92, 1),
+                                                  ),
+                                                ),
+                                                Text(
+                                                  'Resultado: ${operation.result}',
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w300,
+                                                    fontSize: 10,
+                                                    color: Color.fromRGBO(
+                                                        100, 92, 92, 1),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                ],
+                              ),
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text(operation.title!),
+                                      content: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
+                                              /*
+                                              separar fazer com text + DataTable
+                                               */
                                               Text(
-                                                operation.title,
+                                                'Matriz X:\n${operation.matriz1}',
                                                 style: const TextStyle(
-                                                  fontWeight: FontWeight.w400,
-                                                  fontSize: 12,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 4),
-                                              Text(
-                                                'Matriz X: ${operation.matriz1}',
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.w300,
-                                                  fontSize: 10,
-                                                  color: Color.fromRGBO(
-                                                      100, 92, 92, 1),
-                                                ),
+                                                    fontSize: 20),
                                               ),
                                               Text(
-                                                'Matriz Y: ${operation.matriz2}',
+                                                'Matriz Y:\n${operation.matriz2}',
                                                 style: const TextStyle(
-                                                  fontWeight: FontWeight.w300,
-                                                  fontSize: 10,
-                                                  color: Color.fromRGBO(
-                                                      100, 92, 92, 1),
-                                                ),
+                                                    fontSize: 20),
                                               ),
                                               Text(
-                                                'Resultado: ${operation.result}',
+                                                'Resultado:\n${operation.result}',
                                                 style: const TextStyle(
-                                                  fontWeight: FontWeight.w300,
-                                                  fontSize: 10,
-                                                  color: Color.fromRGBO(
-                                                      100, 92, 92, 1),
-                                                ),
+                                                    fontSize: 28),
                                               ),
                                             ],
                                           ),
-                                        ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                )
-                              ],
-                            ),
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text(operation.title),
-                                    content: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            /*
-                                            separar fazer com text + DataTable
-                                             */
-                                            Text(
-                                              'Matriz X:\n${operation.matriz1}',
-                                              style:
-                                                  const TextStyle(fontSize: 20),
-                                            ),
-                                            Text(
-                                              'Matriz Y:\n${operation.matriz2}',
-                                              style:
-                                                  const TextStyle(fontSize: 20),
-                                            ),
-                                            Text(
-                                              'Resultado:\n${operation.result}',
-                                              style:
-                                                  const TextStyle(fontSize: 28),
-                                            ),
-                                          ],
+                                      actions: [
+                                        ElevatedButton(
+                                          child: const Text('Fechar'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
                                         ),
                                       ],
-                                    ),
-                                    actions: [
-                                      ElevatedButton(
-                                        child: const Text('Fechar'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
+                                    );
+                                  },
+                                );
+                              },
+                            ),
                           );
                         },
                       ))
@@ -814,9 +884,12 @@ class _HomePageState extends State<HomePage> {
               icon: icone,
             );
             //adicionando o objeto na lsita
+
             setState(() {
-              matrixHistory.add(operation);
+              db.matrixHistory.add(operation);
             });
+
+            db.updateDataBase();
 
             resultado(matrizes, titulos);
           });

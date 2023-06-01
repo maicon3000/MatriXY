@@ -1,7 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:matrixy/pages/home_page.dart';
 
-void main() {
+import 'matrix/matriz.dart';
+
+void main() async {
+  // Registre o adaptador
+
+  await Hive.initFlutter();
+
+  Hive.registerAdapter(MatrixOperationAdapter());
+  Hive.registerAdapter(MatrizAdapter());
+
+  //open a box
+  var box = await Hive.openBox('mybox');
   runApp(const MyApp());
 }
 
