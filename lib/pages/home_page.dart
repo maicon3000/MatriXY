@@ -1,9 +1,23 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:matrixy/pages/carregamento_calc.dart';
 import '../matrix/matriz.dart';
 import 'package:lottie/lottie.dart';
+
+class MatrixOperation {
+  Matriz? matriz1;
+  Matriz? matriz2;
+  String title;
+  Matriz result;
+  String icon;
+
+  MatrixOperation({
+    required this.matriz1,
+    required this.matriz2,
+    required this.title,
+    required this.result,
+    required this.icon,
+  });
+}
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -36,68 +50,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     //CADA TILE DO HISTORICO
-    final myHistoricTile = GestureDetector(
-      onTap: () {
-        //ação ao clicar no card
-      },
-      child: Container(
-        height: MediaQuery.of(context).size.height * 0.073,
-        decoration: const BoxDecoration(
-          border: Border(
-            top: BorderSide(
-              width: 2,
-              color: Color.fromRGBO(23, 23, 23, 1),
-            ),
-          ),
-          gradient: RadialGradient(
-            colors: [
-              Color.fromRGBO(16, 16, 16, 1),
-              Color.fromRGBO(7, 7, 7, 1),
-            ],
-            radius: 3,
-            center: Alignment.center,
-          ),
-        ),
-        child: Row(
-          children: [
-            const Icon(
-              Icons.add,
-              color: Color.fromRGBO(217, 217, 217, 1),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      'Adição',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 12,
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      'Soma a matriz X e Y',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w300,
-                        fontSize: 10,
-                        color: Color.fromRGBO(100, 92, 92, 1),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
 
     //APPBAR
     final myAppBarContainer = Container(
@@ -515,7 +468,8 @@ class _HomePageState extends State<HomePage> {
                                 child: Text(
                                   'Matriz ${(containerIndex + 1) == 1 ? 'X' : 'Y'}',
                                   textAlign: TextAlign.center,
-                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ),
                             ),
@@ -537,7 +491,8 @@ class _HomePageState extends State<HomePage> {
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     border: Border.all(
-                                      color: const Color.fromRGBO(235, 64, 52, 0.7),
+                                      color: const Color.fromRGBO(
+                                          235, 64, 52, 0.7),
                                       width: 2.0,
                                     ),
                                   ),
@@ -610,10 +565,18 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.only(top: 8.0),
               child: Container(
                 decoration: const BoxDecoration(
-                  color: Color.fromRGBO(7, 7, 7, 1),
+                  color: Color.fromRGBO(23, 23, 23, 1),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30),
                     topRight: Radius.circular(30),
+                  ),
+                  gradient: RadialGradient(
+                    colors: [
+                      Color.fromRGBO(16, 16, 16, 1),
+                      Color.fromRGBO(7, 7, 7, 1),
+                    ],
+                    radius: 3,
+                    center: Alignment.center,
                   ),
                 ),
                 child: Padding(
@@ -629,29 +592,151 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       Expanded(
-                        child: ListView(
-                          //remove padding padrao do listview
-                          padding: EdgeInsets.zero,
-                          children: [
-                            myHistoricTile,
-                            const SizedBox(
-                              height: 10,
+                          child: ListView.builder(
+                        itemCount: matrixHistory.length,
+                        itemBuilder: (context, index) {
+                          MatrixOperation operation = matrixHistory[index];
+                          return GestureDetector(
+                            child: Column(
+                              children: [
+                                Container(
+                                  decoration: const BoxDecoration(
+                                    border: Border(
+                                      top: BorderSide(
+                                        width: 2,
+                                        color: Color.fromRGBO(23, 23, 23, 1),
+                                      ),
+                                    ),
+                                    gradient: RadialGradient(
+                                      colors: [
+                                        Color.fromRGBO(16, 16, 16, 1),
+                                        Color.fromRGBO(7, 7, 7, 1),
+                                      ],
+                                      radius: 3,
+                                      center: Alignment.center,
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 18.0),
+                                        child: Image.asset(
+                                          operation.icon,
+                                          width: 30,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                operation.title,
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 12,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 4),
+                                              Text(
+                                                'Matriz X: ${operation.matriz1}',
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.w300,
+                                                  fontSize: 10,
+                                                  color: Color.fromRGBO(
+                                                      100, 92, 92, 1),
+                                                ),
+                                              ),
+                                              Text(
+                                                'Matriz Y: ${operation.matriz2}',
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.w300,
+                                                  fontSize: 10,
+                                                  color: Color.fromRGBO(
+                                                      100, 92, 92, 1),
+                                                ),
+                                              ),
+                                              Text(
+                                                'Resultado: ${operation.result}',
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.w300,
+                                                  fontSize: 10,
+                                                  color: Color.fromRGBO(
+                                                      100, 92, 92, 1),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                )
+                              ],
                             ),
-                            myHistoricTile,
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            myHistoricTile,
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            myHistoricTile,
-                            const SizedBox(
-                              height: 10,
-                            ),
-                          ],
-                        ),
-                      )
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text(operation.title),
+                                    content: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            /*
+                                            separar fazer com text + DataTable
+                                             */
+                                            Text(
+                                              'Matriz X:\n${operation.matriz1}',
+                                              style:
+                                                  const TextStyle(fontSize: 20),
+                                            ),
+                                            Text(
+                                              'Matriz Y:\n${operation.matriz2}',
+                                              style:
+                                                  const TextStyle(fontSize: 20),
+                                            ),
+                                            Text(
+                                              'Resultado:\n${operation.result}',
+                                              style:
+                                                  const TextStyle(fontSize: 28),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    actions: [
+                                      ElevatedButton(
+                                        child: const Text('Fechar'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                          );
+                        },
+                      ))
                     ],
                   ),
                 ),
@@ -666,7 +751,7 @@ class _HomePageState extends State<HomePage> {
   List<DataColumn> _buildColumns(int? columnCount) {
     return List.generate(
       columnCount!,
-          (index) => const DataColumn(
+      (index) => const DataColumn(
         label: Text(''),
       ),
     );
@@ -687,16 +772,16 @@ class _HomePageState extends State<HomePage> {
     }).toList();
   }
 
+  List<MatrixOperation> matrixHistory = [];
+
   void operacao(Matriz? matriz1, Matriz? matriz2, int chave, String valor) {
     if (matriz1 == null && matriz2 == null && (chave == 5 || chave == 6)) {
       return alerta('Formato inválido',
-          'Deve-se preencher pelo menos uma matriz para realizar a ${valor
-              .toLowerCase()}!');
+          'Deve-se preencher pelo menos uma matriz para realizar a ${valor.toLowerCase()}!');
     } else if ((matriz1 == null || matriz2 == null) &&
         (chave != 4 && chave != 5 && chave != 6)) {
       return alerta('Formato inválido',
-          'Deve-se preencher ambas matrizes para realizar a ${valor
-              .toLowerCase()}!');
+          'Deve-se preencher ambas matrizes para realizar a ${valor.toLowerCase()}!');
     }
 
     Matriz matriz;
@@ -710,15 +795,30 @@ class _HomePageState extends State<HomePage> {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          Future.delayed(const Duration(milliseconds: 5000), () {
+          Future.delayed(const Duration(milliseconds: 1000), () {
             Navigator.of(context).pop();
-            titulo = 'Matriz X+Y';
+            titulo = 'Adição';
             // Continue com o cálculo aqui
             matriz = matriz1!.adicao(matriz2!);
             matrizes.add(matriz);
             titulos.add(titulo);
-            resultado(matrizes, titulos);
 
+            String icone = 'lib/assets/cruz.png';
+
+            // Após calcular a matriz resultante, adicione a operação ao histórico
+            MatrixOperation operation = MatrixOperation(
+              matriz1: matriz1,
+              matriz2: matriz2,
+              title: titulo,
+              result: matriz,
+              icon: icone,
+            );
+            //adicionando o objeto na lsita
+            setState(() {
+              matrixHistory.add(operation);
+            });
+
+            resultado(matrizes, titulos);
           });
 
           return CarragamentoCalc();
@@ -729,13 +829,28 @@ class _HomePageState extends State<HomePage> {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          Future.delayed(const Duration(milliseconds: 5000), () {
+          Future.delayed(const Duration(milliseconds: 1000), () {
             Navigator.of(context).pop();
-            titulo = 'Matriz X-Y';
+            titulo = 'Subtração';
             // Continue com o cálculo aqui
             matriz = matriz1!.subtracao(matriz2!);
             matrizes.add(matriz);
             titulos.add(titulo);
+
+            String icone = 'lib/assets/menos.png';
+
+            // Após calcular a matriz resultante, adicione a operação ao histórico
+            MatrixOperation operation = MatrixOperation(
+              matriz1: matriz1,
+              matriz2: matriz2,
+              title: titulo,
+              result: matriz,
+              icon: icone,
+            );
+            setState(() {
+              matrixHistory.add(operation);
+            });
+
             resultado(matrizes, titulos);
           });
 
@@ -748,13 +863,27 @@ class _HomePageState extends State<HomePage> {
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            Future.delayed(const Duration(milliseconds: 5000), () {
+            Future.delayed(const Duration(milliseconds: 1000), () {
               Navigator.of(context).pop();
               titulo = 'Matriz X*Y';
               // Continue com o cálculo aqui
               matriz = matriz1!.multiplicacaoPorElemento(matriz2!);
               matrizes.add(matriz);
               titulos.add(titulo);
+
+              String icone = 'lib/assets/multiplique-o-sinal-matematico.png';
+              // Após calcular a matriz resultante, adicione a operação ao histórico
+              MatrixOperation operation = MatrixOperation(
+                matriz1: matriz1,
+                matriz2: matriz2,
+                title: titulo,
+                result: matriz,
+                icon: icone,
+              );
+              setState(() {
+                matrixHistory.add(operation);
+              });
+
               resultado(matrizes, titulos);
             });
 
@@ -779,7 +908,8 @@ class _HomePageState extends State<HomePage> {
             return CarragamentoCalc();
           },
         );
-      } else if ((matriz1?.columns == 1 && matriz1?.rows == 1) || (matriz2?.columns == 1 && matriz2?.rows == 1)) {
+      } else if ((matriz1?.columns == 1 && matriz1?.rows == 1) ||
+          (matriz2?.columns == 1 && matriz2?.rows == 1)) {
         int escalar;
         showDialog(
           context: context,
@@ -810,33 +940,35 @@ class _HomePageState extends State<HomePage> {
             "Para cálculo de ${valor.toLowerCase()} as matrizes devem possuir a mesma estrutura ou o número de colunas da matriz X igual ao número de linhas da matriz Y (vice-versa) ou uma das matrizes multiplicadas por um valor único (escalar)");
       }
     } else if (chave == 6) {
-        if (matriz1 != null && matriz2 != null &&
-            matriz1.rows == matriz1.columns &&
-            matriz2.rows == matriz2.columns) {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              Future.delayed(const Duration(milliseconds: 5000), () {
-                Navigator.of(context).pop();
-                titulo = '|Matriz X|';
-                matriz = matriz1.determinante(matriz1.elements);
-                matrizes.add(matriz);
-                titulos.add(titulo);
+      if (matriz1 != null &&
+          matriz2 != null &&
+          matriz1.rows == matriz1.columns &&
+          matriz2.rows == matriz2.columns) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            Future.delayed(const Duration(milliseconds: 5000), () {
+              Navigator.of(context).pop();
+              titulo = '|Matriz X|';
+              matriz = matriz1.determinante(matriz1.elements);
+              matrizes.add(matriz);
+              titulos.add(titulo);
 
-                titulo = '|Matriz Y|';
-                matriz = matriz2.determinante(matriz2.elements);
-                matrizes.add(matriz);
-                titulos.add(titulo);
-                  //TO DO: Chamar o calculo para as duas matrizes
-                  //matriz = matriz2!.determinante(matriz2!.elements);
-                resultado(matrizes, titulos);
-              });
+              titulo = '|Matriz Y|';
+              matriz = matriz2.determinante(matriz2.elements);
+              matrizes.add(matriz);
+              titulos.add(titulo);
+              //TO DO: Chamar o calculo para as duas matrizes
+              //matriz = matriz2!.determinante(matriz2!.elements);
+              resultado(matrizes, titulos);
+            });
 
-              return CarragamentoCalc();
-            },
-          );
-      } else if (matriz1 != null && matriz2 == null &&
+            return CarragamentoCalc();
+          },
+        );
+      } else if (matriz1 != null &&
+          matriz2 == null &&
           matriz1.rows == matriz1.columns) {
         showDialog(
           context: context,
@@ -855,8 +987,9 @@ class _HomePageState extends State<HomePage> {
             return CarragamentoCalc();
           },
         );
-      } else if (matriz1 == null && matriz2 != null &&
-        matriz2.rows == matriz2.columns) {
+      } else if (matriz1 == null &&
+          matriz2 != null &&
+          matriz2.rows == matriz2.columns) {
         showDialog(
           context: context,
           barrierDismissible: false,
@@ -875,7 +1008,7 @@ class _HomePageState extends State<HomePage> {
         );
       } else {
         alerta("Estrutura inválida!",
-           "Para cálculo de determinante a matriz deve ser quadrada");
+            "Para cálculo de determinante a matriz deve ser quadrada");
       }
     } else {
       alerta("Estrutura inválida!",
@@ -986,5 +1119,4 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
-
 }

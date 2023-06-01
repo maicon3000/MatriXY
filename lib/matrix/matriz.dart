@@ -7,7 +7,8 @@ class Matriz {
 
   Matriz adicao(Matriz outraMatriz) {
     if (rows != outraMatriz.rows || columns != outraMatriz.columns) {
-      throw Exception('As matrizes devem ter o mesmo número de linhas e colunas para serem somadas.');
+      throw Exception(
+          'As matrizes devem ter o mesmo número de linhas e colunas para serem somadas.');
     }
 
     List<List<int>> resultado = [];
@@ -27,7 +28,8 @@ class Matriz {
 
   Matriz subtracao(Matriz outraMatriz) {
     if (rows != outraMatriz.rows || columns != outraMatriz.columns) {
-      throw Exception('As matrizes devem ter o mesmo número de linhas e colunas para serem subtraídas.');
+      throw Exception(
+          'As matrizes devem ter o mesmo número de linhas e colunas para serem subtraídas.');
     }
 
     List<List<int>> resultado = [];
@@ -45,10 +47,10 @@ class Matriz {
     return Matriz(rows, columns, resultado);
   }
 
-
   Matriz multiplicacao(Matriz outraMatriz) {
     if (columns != outraMatriz.rows) {
-      throw Exception('O número de colunas da primeira matriz deve ser igual ao número de linhas da segunda matriz para multiplicação de matrizes.');
+      throw Exception(
+          'O número de colunas da primeira matriz deve ser igual ao número de linhas da segunda matriz para multiplicação de matrizes.');
     }
 
     List<List<int>> resultado = [];
@@ -74,7 +76,8 @@ class Matriz {
 
   Matriz multiplicacaoPorElemento(Matriz outraMatriz) {
     if (rows != outraMatriz.rows || columns != outraMatriz.columns) {
-      throw Exception('As matrizes devem ter o mesmo número de linhas e colunas para multiplicação por elemento.');
+      throw Exception(
+          'As matrizes devem ter o mesmo número de linhas e colunas para multiplicação por elemento.');
     }
 
     List<List<int>> resultado = [];
@@ -110,19 +113,22 @@ class Matriz {
 
   Matriz Inversao() {
     if (rows != columns) {
-      throw Exception('A matriz deve ser quadrada para ter uma matriz inversa.');
+      throw Exception(
+          'A matriz deve ser quadrada para ter uma matriz inversa.');
     }
 
     int n = rows;
 
     // Criar uma matriz identidade do mesmo tamanho da matriz original.
-    List<List<int>> identidade = List.generate(n, (i) => List<int>.filled(n, 0));
+    List<List<int>> identidade =
+        List.generate(n, (i) => List<int>.filled(n, 0));
     for (int i = 0; i < n; i++) {
       identidade[i][i] = 1;
     }
 
     // Criar uma cópia da matriz original para manipulação.
-    List<List<int>> matrizOriginal = List.generate(n, (i) => List<int>.from(elements[i]));
+    List<List<int>> matrizOriginal =
+        List.generate(n, (i) => List<int>.from(elements[i]));
 
     // Realizar o processo de eliminação de Gauss-Jordan.
     for (int i = 0; i < n; i++) {
@@ -196,7 +202,8 @@ class Matriz {
 
   Matriz determinante(List<List<int>> matrix) {
     if (matrix.length != matrix[0].length) {
-      throw Exception('A matriz não é quadrada. O determinante não pode ser calculado.');
+      throw Exception(
+          'A matriz não é quadrada. O determinante não pode ser calculado.');
     }
 
     int size = matrix.length;
@@ -252,5 +259,18 @@ class Matriz {
     }
 
     return subMatrix;
+  }
+
+  @override
+  String toString() {
+    // Retorne uma representação personalizada da matriz
+    String result = '';
+    for (int i = 0; i < rows; i++) {
+      for (int j = 0; j < columns; j++) {
+        result += '${elements[i][j]}\t';
+      }
+      result += '\n';
+    }
+    return result;
   }
 }
