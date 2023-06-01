@@ -924,6 +924,8 @@ class _HomePageState extends State<HomePage> {
               matrixHistory.add(operation);
             });
 
+            db.updateDataBase();
+
             resultado(matrizes, titulos);
           });
 
@@ -956,6 +958,8 @@ class _HomePageState extends State<HomePage> {
               setState(() {
                 matrixHistory.add(operation);
               });
+
+              db.updateDataBase();
 
               resultado(matrizes, titulos);
             });
