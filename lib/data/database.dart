@@ -7,20 +7,20 @@ class HistoricDataBase {
   final _myBox = Hive.box('mybox');
 
   //criando a lista, vamos usar essa lá na homepage( instanciando essa classe)
-  List<dynamic> matrixHistory = [];
+  List<dynamic> matrizHistory = [];
 
   //rodar se for a primeira vez abrindo o app
   void createInitialDate() {
-    matrixHistory = [];
+    matrizHistory = [];
   }
 
   //carregar o banco se ja tivermos informacoes no
   void loadData() {
-    matrixHistory = _myBox.get('HISTORICLIST', defaultValue: []);
+    matrizHistory = _myBox.get('HISTORICLIST', defaultValue: []);
   }
 
   //atualizar o banco
   void updateDataBase() {
-    _myBox.put('HISTORICLIST', matrixHistory);
+    _myBox.put('HISTORICLIST', matrizHistory);
   }
 }
