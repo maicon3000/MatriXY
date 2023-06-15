@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
+import 'package:matrixy/pages/home_page.dart';
 
 import '../data/database.dart';
 import 'login_page.dart';
@@ -51,7 +52,7 @@ class _SplashScreenState extends State<SplashScreen>
           milliseconds: 5000)); // Adiciona um pequeno atraso de 500ms
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const LoginPage()),
+        MaterialPageRoute(builder: (context) => const HomePage()),
       );
     }
   }

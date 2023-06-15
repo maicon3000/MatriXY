@@ -27,6 +27,8 @@ class MatrizOperation {
 class MatrizOperationAdapter extends TypeAdapter<MatrizOperation> {
   @override
   MatrizOperation read(BinaryReader reader) {
+    String? avatarImagePath =
+        reader.read(); // Leia a string do caminho/nome da imagem
     Matriz? matriz1 = reader.read(); // Leia o objeto Matriz
     Matriz? matriz2 = reader.read(); // Leia o objeto Matriz
     String? title = reader.read(); // Leia a string
@@ -59,7 +61,15 @@ class MatrizOperationAdapter extends TypeAdapter<MatrizOperation> {
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final Image? selectedAvatar;
+  final String? name;
+  final String? selectedSex;
+  const HomePage({
+    super.key,
+    this.selectedAvatar,
+    this.name,
+    this.selectedSex,
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -132,13 +142,17 @@ class _HomePageState extends State<HomePage> {
           bottomRight: Radius.circular(30),
         ),
       ),
-      child: const Padding(
-        padding: EdgeInsets.all(16.0),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Bem-Vindo mulekot'),
-            Icon(Icons.person),
+            if (widget.selectedSex == 'M') Text('Bem-Vindo ${widget.name}'),
+            if (widget.selectedSex == 'F') Text('Bem-Vinda ${widget.name}'),
+            if (widget.selectedSex == 'null')
+              Text('Bem-Vindo(a) ${widget.name}'),
+            //operador de coalescencia nula(??)
+            widget.selectedAvatar ?? Container(),
           ],
         ),
       ),
@@ -934,8 +948,8 @@ class _HomePageState extends State<HomePage> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: const Row(
-                                        children: [
+                                      title: Row(
+                                        children: const [
                                           Icon(
                                             Icons.verified,
                                             color: Colors.blue,
@@ -1463,7 +1477,7 @@ class _HomePageState extends State<HomePage> {
       return alerta('Formato inválido',
           'Deve-se preencher ambas matrizes para realizar a ${valor.toLowerCase()}!');
     } else if (((matriz1 != null && matriz1.rows != matriz1.columns) ||
-        (matriz2 != null && matriz2.rows != matriz2.columns)) &&
+            (matriz2 != null && matriz2.rows != matriz2.columns)) &&
         (chave == 4 || chave == 5 || chave == 6)) {
       return alerta("Estrutura inválida!",
           "Para cálculo de ${valor.toLowerCase()} a matriz deve ser quadrada");
@@ -2052,8 +2066,8 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Row(
-            children: [
+          title: Row(
+            children: const [
               Icon(
                 Icons.verified,
                 color: Colors.green,

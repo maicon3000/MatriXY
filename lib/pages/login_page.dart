@@ -12,7 +12,6 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final nameController = TextEditingController();
   String selectedSex = '';
-  String selectedAvatar = '';
 
   @override
   Widget build(BuildContext context) {
@@ -85,28 +84,28 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     ChoiceChip(
                       label: const Text('Male'),
-                      selected: selectedSex == 'Male',
+                      selected: selectedSex == 'M',
                       onSelected: (selected) {
                         setState(() {
-                          selectedSex = selected ? 'Male' : '';
+                          selectedSex = selected ? 'M' : '';
                         });
                       },
                     ),
                     ChoiceChip(
                       label: const Text('Female'),
-                      selected: selectedSex == 'Female',
+                      selected: selectedSex == 'F',
                       onSelected: (selected) {
                         setState(() {
-                          selectedSex = selected ? 'Female' : '';
+                          selectedSex = selected ? 'F' : '';
                         });
                       },
                     ),
                     ChoiceChip(
                       label: const Text('Prefer not to say'),
-                      selected: selectedSex == 'Prefer not to say',
+                      selected: selectedSex == 'null',
                       onSelected: (selected) {
                         setState(() {
-                          selectedSex = selected ? 'Prefer not to say' : '';
+                          selectedSex = selected ? 'null' : '';
                         });
                       },
                     ),
@@ -118,7 +117,11 @@ class _LoginPageState extends State<LoginPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const AvatarSelectionPage()),
+                        builder: (context) => AvatarSelectionPage(
+                          name: nameController.text,
+                          selectedSex: selectedSex,
+                        ),
+                      ),
                     );
                   },
                   child: Container(
