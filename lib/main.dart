@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:matrixy/pages/home_page.dart';
+import 'package:matrixy/pages/splash_screen.dart';
 
 import 'matrix/matriz.dart';
 
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomePage(),
+      home: const SplashScreen(),
     );
   }
 }

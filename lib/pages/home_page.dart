@@ -132,11 +132,11 @@ class _HomePageState extends State<HomePage> {
           bottomRight: Radius.circular(30),
         ),
       ),
-      child: const Padding(
-        padding: EdgeInsets.all(16.0),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
+          children: const [
             Text('Bem-Vindo mulekot'),
             Icon(Icons.person),
           ],
@@ -207,7 +207,8 @@ class _HomePageState extends State<HomePage> {
                 height: MediaQuery.of(context).size.height * 0.029,
                 child: ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.amber),
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.amber),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -217,25 +218,32 @@ class _HomePageState extends State<HomePage> {
                   onPressed: () {
                     switch (selectedOption) {
                       case 'Adição':
-                        operacao(matriz1, matriz2, item.keys.elementAt(1), item[item.keys.elementAt(1)]!);
+                        operacao(matriz1, matriz2, item.keys.elementAt(1),
+                            item[item.keys.elementAt(1)]!);
                         break;
                       case 'Subtração':
-                        operacao(matriz1, matriz2, item.keys.elementAt(2), item[item.keys.elementAt(2)]!);
+                        operacao(matriz1, matriz2, item.keys.elementAt(2),
+                            item[item.keys.elementAt(2)]!);
                         break;
                       case 'Multiplicação':
-                        operacao(matriz1, matriz2, item.keys.elementAt(3), item[item.keys.elementAt(3)]!);
+                        operacao(matriz1, matriz2, item.keys.elementAt(3),
+                            item[item.keys.elementAt(3)]!);
                         break;
                       case 'Transposição':
-                        operacao(matriz1, matriz2, item.keys.elementAt(4), item[item.keys.elementAt(4)]!);
+                        operacao(matriz1, matriz2, item.keys.elementAt(4),
+                            item[item.keys.elementAt(4)]!);
                         break;
                       case 'Inversão':
-                        operacao(matriz1, matriz2, item.keys.elementAt(5), item[item.keys.elementAt(5)]!);
+                        operacao(matriz1, matriz2, item.keys.elementAt(5),
+                            item[item.keys.elementAt(5)]!);
                         break;
                       case 'Determinante':
-                        operacao(matriz1, matriz2, item.keys.elementAt(6), item[item.keys.elementAt(6)]!);
+                        operacao(matriz1, matriz2, item.keys.elementAt(6),
+                            item[item.keys.elementAt(6)]!);
                         break;
                       default:
-                        alerta('Opção inválida', 'Deve-se selecionar uma operação!');
+                        alerta('Opção inválida',
+                            'Deve-se selecionar uma operação!');
                     }
                   },
                   child: const Text(
@@ -481,7 +489,8 @@ class _HomePageState extends State<HomePage> {
     }
 
     //CONTAINER COM AS MATRIZES
-    Widget buildMatrixContainer(int containerIndex, Matriz? matriz, double left, double right) {
+    Widget buildMatrixContainer(
+        int containerIndex, Matriz? matriz, double left, double right) {
       return InkWell(
         onTap: () {
           openMatrixDialog(containerIndex);
@@ -522,7 +531,8 @@ class _HomePageState extends State<HomePage> {
                                 child: Text(
                                   'Matriz ${(containerIndex + 1) == 1 ? 'X' : 'Y'}',
                                   textAlign: TextAlign.center,
-                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ),
                             ),
@@ -544,7 +554,8 @@ class _HomePageState extends State<HomePage> {
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     border: Border.all(
-                                      color: const Color.fromRGBO(235, 64, 52, 0.7),
+                                      color: const Color.fromRGBO(
+                                          235, 64, 52, 0.7),
                                       width: 2.0,
                                     ),
                                   ),
@@ -682,7 +693,8 @@ class _HomePageState extends State<HomePage> {
                                     child: Row(
                                       children: [
                                         Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 18.0),
                                           child: Image.asset(
                                             operation.icon!,
                                             width: 30,
@@ -691,16 +703,19 @@ class _HomePageState extends State<HomePage> {
                                         const SizedBox(width: 10),
                                         Expanded(
                                           child: Padding(
-                                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 8.0),
                                             child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Row(
                                                   children: [
                                                     Text(
                                                       operation.title!,
                                                       style: const TextStyle(
-                                                        fontWeight: FontWeight.w400,
+                                                        fontWeight:
+                                                            FontWeight.w400,
                                                         fontSize: 12,
                                                         color: Colors.white,
                                                       ),
@@ -709,76 +724,149 @@ class _HomePageState extends State<HomePage> {
                                                 ),
                                                 const SizedBox(height: 4),
                                                 operation.matriz1 != null &&
-                                                        operation.matriz2 != null &&
+                                                        operation.matriz2 !=
+                                                            null &&
                                                         (operation.title! == 'Transposição' ||
-                                                            operation.title! == 'Inversão' ||
-                                                            operation.title! == 'Determinante')
+                                                            operation.title! ==
+                                                                'Inversão' ||
+                                                            operation.title! ==
+                                                                'Determinante')
                                                     ? Row(
                                                         children: [
                                                           const Text(
                                                             'Resultado X:',
                                                             style: TextStyle(
-                                                              fontWeight: FontWeight.w300,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w300,
                                                               fontSize: 9,
-                                                              color: Color.fromRGBO(210, 210, 210, 1.0),
+                                                              color: Color
+                                                                  .fromRGBO(
+                                                                      210,
+                                                                      210,
+                                                                      210,
+                                                                      1.0),
                                                             ),
                                                           ),
                                                           DataTable(
-                                                            columns: _buildColumns(operation.result!.columns),
-                                                            rows: _buildRows(operation.result!.elements),
+                                                            columns:
+                                                                _buildColumns(
+                                                                    operation
+                                                                        .result!
+                                                                        .columns),
+                                                            rows: _buildRows(
+                                                                operation
+                                                                    .result!
+                                                                    .elements),
                                                             columnSpacing: 8,
                                                             dataRowHeight: 16,
                                                             headingRowHeight: 0,
-                                                            dataTextStyle: const TextStyle(
+                                                            dataTextStyle:
+                                                                const TextStyle(
                                                               fontSize: 12,
-                                                              color: Color.fromRGBO(210, 210, 210, 1.0),
+                                                              color: Color
+                                                                  .fromRGBO(
+                                                                      210,
+                                                                      210,
+                                                                      210,
+                                                                      1.0),
                                                             ),
                                                           ),
                                                           const Text(
                                                             'Resultado Y:',
                                                             style: TextStyle(
-                                                              fontWeight: FontWeight.w300,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w300,
                                                               fontSize: 9,
-                                                              color: Color.fromRGBO(210, 210, 210, 1.0),
+                                                              color: Color
+                                                                  .fromRGBO(
+                                                                      210,
+                                                                      210,
+                                                                      210,
+                                                                      1.0),
                                                             ),
                                                           ),
                                                           DataTable(
-                                                            columns: _buildColumns(operation.result2!.columns),
-                                                            rows: _buildRows(operation.result2!.elements),
+                                                            columns: _buildColumns(
+                                                                operation
+                                                                    .result2!
+                                                                    .columns),
+                                                            rows: _buildRows(
+                                                                operation
+                                                                    .result2!
+                                                                    .elements),
                                                             columnSpacing: 8,
                                                             dataRowHeight: 16,
                                                             headingRowHeight: 0,
-                                                            dataTextStyle: const TextStyle(
+                                                            dataTextStyle:
+                                                                const TextStyle(
                                                               fontSize: 12,
-                                                              color: Color.fromRGBO(210, 210, 210, 1.0),
+                                                              color: Color
+                                                                  .fromRGBO(
+                                                                      210,
+                                                                      210,
+                                                                      210,
+                                                                      1.0),
                                                             ),
                                                           ),
                                                         ],
                                                       )
-                                                    : operation.matriz1 == null &&
-                                                            operation.matriz2 != null &&
-                                                            (operation.title! == 'Transposição' ||
-                                                                operation.title! == 'Inversão' ||
-                                                                operation.title! == 'Determinante')
+                                                    : operation.matriz1 ==
+                                                                null &&
+                                                            operation.matriz2 !=
+                                                                null &&
+                                                            (operation
+                                                                        .title! ==
+                                                                    'Transposição' ||
+                                                                operation
+                                                                        .title! ==
+                                                                    'Inversão' ||
+                                                                operation
+                                                                        .title! ==
+                                                                    'Determinante')
                                                         ? Row(
                                                             children: [
                                                               const Text(
                                                                 'Resultado:',
-                                                                style: TextStyle(
-                                                                  fontWeight: FontWeight.w300,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w300,
                                                                   fontSize: 9,
-                                                                  color: Color.fromRGBO(210, 210, 210, 1.0),
+                                                                  color: Color
+                                                                      .fromRGBO(
+                                                                          210,
+                                                                          210,
+                                                                          210,
+                                                                          1.0),
                                                                 ),
                                                               ),
                                                               DataTable(
-                                                                columns: _buildColumns(operation.result2!.columns),
-                                                                rows: _buildRows(operation.result2!.elements),
-                                                                columnSpacing: 8,
-                                                                dataRowHeight: 16,
-                                                                headingRowHeight: 0,
-                                                                dataTextStyle: const TextStyle(
+                                                                columns: _buildColumns(
+                                                                    operation
+                                                                        .result2!
+                                                                        .columns),
+                                                                rows: _buildRows(
+                                                                    operation
+                                                                        .result2!
+                                                                        .elements),
+                                                                columnSpacing:
+                                                                    8,
+                                                                dataRowHeight:
+                                                                    16,
+                                                                headingRowHeight:
+                                                                    0,
+                                                                dataTextStyle:
+                                                                    const TextStyle(
                                                                   fontSize: 12,
-                                                                  color: Color.fromRGBO(210, 210, 210, 1.0),
+                                                                  color: Color
+                                                                      .fromRGBO(
+                                                                          210,
+                                                                          210,
+                                                                          210,
+                                                                          1.0),
                                                                 ),
                                                               ),
                                                             ],
@@ -787,21 +875,44 @@ class _HomePageState extends State<HomePage> {
                                                             children: [
                                                               const Text(
                                                                 'Resultado:',
-                                                                style: TextStyle(
-                                                                  fontWeight: FontWeight.w300,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w300,
                                                                   fontSize: 9,
-                                                                  color: Color.fromRGBO(210, 210, 210, 1.0),
+                                                                  color: Color
+                                                                      .fromRGBO(
+                                                                          210,
+                                                                          210,
+                                                                          210,
+                                                                          1.0),
                                                                 ),
                                                               ),
                                                               DataTable(
-                                                                columns: _buildColumns(operation.result!.columns),
-                                                                rows: _buildRows(operation.result!.elements),
-                                                                columnSpacing: 8,
-                                                                dataRowHeight: 16,
-                                                                headingRowHeight: 0,
-                                                                dataTextStyle: const TextStyle(
+                                                                columns: _buildColumns(
+                                                                    operation
+                                                                        .result!
+                                                                        .columns),
+                                                                rows: _buildRows(
+                                                                    operation
+                                                                        .result!
+                                                                        .elements),
+                                                                columnSpacing:
+                                                                    8,
+                                                                dataRowHeight:
+                                                                    16,
+                                                                headingRowHeight:
+                                                                    0,
+                                                                dataTextStyle:
+                                                                    const TextStyle(
                                                                   fontSize: 12,
-                                                                  color: Color.fromRGBO(210, 210, 210, 1.0),
+                                                                  color: Color
+                                                                      .fromRGBO(
+                                                                          210,
+                                                                          210,
+                                                                          210,
+                                                                          1.0),
                                                                 ),
                                                               ),
                                                             ],
@@ -823,8 +934,8 @@ class _HomePageState extends State<HomePage> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: const Row(
-                                        children: [
+                                      title: Row(
+                                        children: const [
                                           Icon(
                                             Icons.verified,
                                             color: Colors.blue,
@@ -835,10 +946,12 @@ class _HomePageState extends State<HomePage> {
                                         ],
                                       ), //Text(operation.title!),
                                       content: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               const SizedBox(
                                                 height: 30,
@@ -857,31 +970,56 @@ class _HomePageState extends State<HomePage> {
                                               const SizedBox(
                                                 height: 50,
                                               ),
-                                              operation.matriz1 != null && operation.matriz2 != null
+                                              operation.matriz1 != null &&
+                                                      operation.matriz2 != null
                                                   ? Column(
                                                       children: [
                                                         Row(
                                                           children: [
                                                             const Padding(
-                                                              padding: EdgeInsets.only(right: 8.0),
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      right:
+                                                                          8.0),
                                                               child: Text(
                                                                 'Matriz X:',
-                                                                style: TextStyle(
-                                                                  fontWeight: FontWeight.w300,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w300,
                                                                   fontSize: 9,
-                                                                  color: Color.fromRGBO(150, 150, 150, 1.0),
+                                                                  color: Color
+                                                                      .fromRGBO(
+                                                                          150,
+                                                                          150,
+                                                                          150,
+                                                                          1.0),
                                                                 ),
                                                               ),
                                                             ),
                                                             DataTable(
-                                                              columns: _buildColumns(operation.matriz1!.columns),
-                                                              rows: _buildRows(operation.matriz1!.elements),
+                                                              columns: _buildColumns(
+                                                                  operation
+                                                                      .matriz1!
+                                                                      .columns),
+                                                              rows: _buildRows(
+                                                                  operation
+                                                                      .matriz1!
+                                                                      .elements),
                                                               columnSpacing: 8,
                                                               dataRowHeight: 16,
-                                                              headingRowHeight: 0,
-                                                              dataTextStyle: const TextStyle(
+                                                              headingRowHeight:
+                                                                  0,
+                                                              dataTextStyle:
+                                                                  const TextStyle(
                                                                 fontSize: 12,
-                                                                color: Color.fromRGBO(150, 150, 150, 1.0),
+                                                                color: Color
+                                                                    .fromRGBO(
+                                                                        150,
+                                                                        150,
+                                                                        150,
+                                                                        1.0),
                                                               ),
                                                             ),
                                                           ],
@@ -892,54 +1030,104 @@ class _HomePageState extends State<HomePage> {
                                                         Row(
                                                           children: [
                                                             const Padding(
-                                                              padding: EdgeInsets.only(right: 8.0),
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      right:
+                                                                          8.0),
                                                               child: Text(
                                                                 'Matriz Y:',
-                                                                style: TextStyle(
-                                                                  fontWeight: FontWeight.w300,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w300,
                                                                   fontSize: 9,
-                                                                  color: Color.fromRGBO(150, 150, 150, 1.0),
+                                                                  color: Color
+                                                                      .fromRGBO(
+                                                                          150,
+                                                                          150,
+                                                                          150,
+                                                                          1.0),
                                                                 ),
                                                               ),
                                                             ),
                                                             DataTable(
-                                                              columns: _buildColumns(operation.matriz2!.columns),
-                                                              rows: _buildRows(operation.matriz2!.elements),
+                                                              columns: _buildColumns(
+                                                                  operation
+                                                                      .matriz2!
+                                                                      .columns),
+                                                              rows: _buildRows(
+                                                                  operation
+                                                                      .matriz2!
+                                                                      .elements),
                                                               columnSpacing: 8,
                                                               dataRowHeight: 16,
-                                                              headingRowHeight: 0,
-                                                              dataTextStyle: const TextStyle(
+                                                              headingRowHeight:
+                                                                  0,
+                                                              dataTextStyle:
+                                                                  const TextStyle(
                                                                 fontSize: 12,
-                                                                color: Color.fromRGBO(150, 150, 150, 1.0),
+                                                                color: Color
+                                                                    .fromRGBO(
+                                                                        150,
+                                                                        150,
+                                                                        150,
+                                                                        1.0),
                                                               ),
                                                             ),
                                                           ],
                                                         )
                                                       ],
                                                     )
-                                                  : operation.matriz1 == null && operation.matriz2 != null
+                                                  : operation.matriz1 == null &&
+                                                          operation.matriz2 !=
+                                                              null
                                                       ? Row(
                                                           children: [
                                                             const Padding(
-                                                              padding: EdgeInsets.only(right: 8.0),
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      right:
+                                                                          8.0),
                                                               child: Text(
                                                                 'Matriz:',
-                                                                style: TextStyle(
-                                                                  fontWeight: FontWeight.w300,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w300,
                                                                   fontSize: 9,
-                                                                  color: Color.fromRGBO(150, 150, 150, 1.0),
+                                                                  color: Color
+                                                                      .fromRGBO(
+                                                                          150,
+                                                                          150,
+                                                                          150,
+                                                                          1.0),
                                                                 ),
                                                               ),
                                                             ),
                                                             DataTable(
-                                                              columns: _buildColumns(operation.matriz2!.columns),
-                                                              rows: _buildRows(operation.matriz2!.elements),
+                                                              columns: _buildColumns(
+                                                                  operation
+                                                                      .matriz2!
+                                                                      .columns),
+                                                              rows: _buildRows(
+                                                                  operation
+                                                                      .matriz2!
+                                                                      .elements),
                                                               columnSpacing: 8,
                                                               dataRowHeight: 16,
-                                                              headingRowHeight: 0,
-                                                              dataTextStyle: const TextStyle(
+                                                              headingRowHeight:
+                                                                  0,
+                                                              dataTextStyle:
+                                                                  const TextStyle(
                                                                 fontSize: 12,
-                                                                color: Color.fromRGBO(150, 150, 150, 1.0),
+                                                                color: Color
+                                                                    .fromRGBO(
+                                                                        150,
+                                                                        150,
+                                                                        150,
+                                                                        1.0),
                                                               ),
                                                             ),
                                                           ],
@@ -947,25 +1135,49 @@ class _HomePageState extends State<HomePage> {
                                                       : Row(
                                                           children: [
                                                             const Padding(
-                                                              padding: EdgeInsets.only(right: 8.0),
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      right:
+                                                                          8.0),
                                                               child: Text(
                                                                 'Matriz:',
-                                                                style: TextStyle(
-                                                                  fontWeight: FontWeight.w300,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w300,
                                                                   fontSize: 9,
-                                                                  color: Color.fromRGBO(150, 150, 150, 1.0),
+                                                                  color: Color
+                                                                      .fromRGBO(
+                                                                          150,
+                                                                          150,
+                                                                          150,
+                                                                          1.0),
                                                                 ),
                                                               ),
                                                             ),
                                                             DataTable(
-                                                              columns: _buildColumns(operation.matriz1!.columns),
-                                                              rows: _buildRows(operation.matriz1!.elements),
+                                                              columns: _buildColumns(
+                                                                  operation
+                                                                      .matriz1!
+                                                                      .columns),
+                                                              rows: _buildRows(
+                                                                  operation
+                                                                      .matriz1!
+                                                                      .elements),
                                                               columnSpacing: 8,
                                                               dataRowHeight: 16,
-                                                              headingRowHeight: 0,
-                                                              dataTextStyle: const TextStyle(
+                                                              headingRowHeight:
+                                                                  0,
+                                                              dataTextStyle:
+                                                                  const TextStyle(
                                                                 fontSize: 12,
-                                                                color: Color.fromRGBO(150, 150, 150, 1.0),
+                                                                color: Color
+                                                                    .fromRGBO(
+                                                                        150,
+                                                                        150,
+                                                                        150,
+                                                                        1.0),
                                                               ),
                                                             ),
                                                           ],
@@ -974,85 +1186,161 @@ class _HomePageState extends State<HomePage> {
                                                 height: 50,
                                               ),
                                               operation.matriz1 != null &&
-                                                      operation.matriz2 != null &&
-                                                      (operation.title! == 'Transposição' ||
-                                                          operation.title! == 'Inversão' ||
-                                                          operation.title! == 'Determinante')
+                                                      operation.matriz2 !=
+                                                          null &&
+                                                      (operation.title! ==
+                                                              'Transposição' ||
+                                                          operation.title! ==
+                                                              'Inversão' ||
+                                                          operation.title! ==
+                                                              'Determinante')
                                                   ? Row(
                                                       children: [
                                                         const Padding(
-                                                          padding: EdgeInsets.only(right: 8.0),
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  right: 8.0),
                                                           child: Text(
                                                             'Resultado X:',
                                                             style: TextStyle(
-                                                              fontWeight: FontWeight.w300,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w300,
                                                               fontSize: 9,
-                                                              color: Color.fromRGBO(19, 19, 19, 1.0),
+                                                              color: Color
+                                                                  .fromRGBO(
+                                                                      19,
+                                                                      19,
+                                                                      19,
+                                                                      1.0),
                                                             ),
                                                           ),
                                                         ),
                                                         DataTable(
-                                                          columns: _buildColumns(operation.result!.columns),
-                                                          rows: _buildRows(operation.result!.elements),
+                                                          columns:
+                                                              _buildColumns(
+                                                                  operation
+                                                                      .result!
+                                                                      .columns),
+                                                          rows: _buildRows(
+                                                              operation.result!
+                                                                  .elements),
                                                           columnSpacing: 8,
                                                           dataRowHeight: 16,
                                                           headingRowHeight: 0,
-                                                          dataTextStyle: const TextStyle(
+                                                          dataTextStyle:
+                                                              const TextStyle(
                                                             fontSize: 12,
-                                                            color: Color.fromRGBO(19, 19, 19, 1.0),
+                                                            color:
+                                                                Color.fromRGBO(
+                                                                    19,
+                                                                    19,
+                                                                    19,
+                                                                    1.0),
                                                           ),
                                                         ),
                                                         const Padding(
-                                                          padding: EdgeInsets.only(right: 8.0),
+                                                          padding:
+                                                              EdgeInsets.only(
+                                                                  right: 8.0),
                                                           child: Text(
                                                             'Resultado Y:',
                                                             style: TextStyle(
-                                                              fontWeight: FontWeight.w300,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w300,
                                                               fontSize: 9,
-                                                              color: Color.fromRGBO(19, 19, 19, 1.0),
+                                                              color: Color
+                                                                  .fromRGBO(
+                                                                      19,
+                                                                      19,
+                                                                      19,
+                                                                      1.0),
                                                             ),
                                                           ),
                                                         ),
                                                         DataTable(
-                                                          columns: _buildColumns(operation.result2!.columns),
-                                                          rows: _buildRows(operation.result2!.elements),
+                                                          columns:
+                                                              _buildColumns(
+                                                                  operation
+                                                                      .result2!
+                                                                      .columns),
+                                                          rows: _buildRows(
+                                                              operation.result2!
+                                                                  .elements),
                                                           columnSpacing: 8,
                                                           dataRowHeight: 16,
                                                           headingRowHeight: 0,
-                                                          dataTextStyle: const TextStyle(
+                                                          dataTextStyle:
+                                                              const TextStyle(
                                                             fontSize: 12,
-                                                            color: Color.fromRGBO(19, 19, 19, 1.0),
+                                                            color:
+                                                                Color.fromRGBO(
+                                                                    19,
+                                                                    19,
+                                                                    19,
+                                                                    1.0),
                                                           ),
                                                         ),
                                                       ],
                                                     )
                                                   : operation.matriz1 == null &&
-                                                          operation.matriz2 != null &&
-                                                          (operation.title! == 'Transposição' ||
-                                                              operation.title! == 'Inversão' ||
-                                                              operation.title! == 'Determinante')
+                                                          operation.matriz2 !=
+                                                              null &&
+                                                          (operation.title! ==
+                                                                  'Transposição' ||
+                                                              operation
+                                                                      .title! ==
+                                                                  'Inversão' ||
+                                                              operation
+                                                                      .title! ==
+                                                                  'Determinante')
                                                       ? Row(
                                                           children: [
                                                             const Padding(
-                                                              padding: EdgeInsets.only(right: 8.0),
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      right:
+                                                                          8.0),
                                                               child: Text(
                                                                 'Resultado:',
-                                                                style: TextStyle(
-                                                                  fontWeight: FontWeight.w300,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w300,
                                                                   fontSize: 9,
-                                                                  color: Color.fromRGBO(19, 19, 19, 1.0),
+                                                                  color: Color
+                                                                      .fromRGBO(
+                                                                          19,
+                                                                          19,
+                                                                          19,
+                                                                          1.0),
                                                                 ),
                                                               ),
                                                             ),
                                                             DataTable(
-                                                              columns: _buildColumns(operation.result!.columns),
-                                                              rows: _buildRows(operation.result!.elements),
+                                                              columns: _buildColumns(
+                                                                  operation
+                                                                      .result!
+                                                                      .columns),
+                                                              rows: _buildRows(
+                                                                  operation
+                                                                      .result!
+                                                                      .elements),
                                                               columnSpacing: 8,
                                                               dataRowHeight: 16,
-                                                              headingRowHeight: 0,
-                                                              dataTextStyle: const TextStyle(
+                                                              headingRowHeight:
+                                                                  0,
+                                                              dataTextStyle:
+                                                                  const TextStyle(
                                                                 fontSize: 12,
-                                                                color: Color.fromRGBO(19, 19, 19, 1.0),
+                                                                color: Color
+                                                                    .fromRGBO(
+                                                                        19,
+                                                                        19,
+                                                                        19,
+                                                                        1.0),
                                                               ),
                                                             ),
                                                           ],
@@ -1060,25 +1348,49 @@ class _HomePageState extends State<HomePage> {
                                                       : Row(
                                                           children: [
                                                             const Padding(
-                                                              padding: EdgeInsets.only(right: 8.0),
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      right:
+                                                                          8.0),
                                                               child: Text(
                                                                 'Resultado:',
-                                                                style: TextStyle(
-                                                                  fontWeight: FontWeight.w300,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w300,
                                                                   fontSize: 9,
-                                                                  color: Color.fromRGBO(19, 19, 19, 1.0),
+                                                                  color: Color
+                                                                      .fromRGBO(
+                                                                          19,
+                                                                          19,
+                                                                          19,
+                                                                          1.0),
                                                                 ),
                                                               ),
                                                             ),
                                                             DataTable(
-                                                              columns: _buildColumns(operation.result!.columns),
-                                                              rows: _buildRows(operation.result!.elements),
+                                                              columns: _buildColumns(
+                                                                  operation
+                                                                      .result!
+                                                                      .columns),
+                                                              rows: _buildRows(
+                                                                  operation
+                                                                      .result!
+                                                                      .elements),
                                                               columnSpacing: 8,
                                                               dataRowHeight: 16,
-                                                              headingRowHeight: 0,
-                                                              dataTextStyle: const TextStyle(
+                                                              headingRowHeight:
+                                                                  0,
+                                                              dataTextStyle:
+                                                                  const TextStyle(
                                                                 fontSize: 12,
-                                                                color: Color.fromRGBO(19, 19, 19, 1.0),
+                                                                color: Color
+                                                                    .fromRGBO(
+                                                                        19,
+                                                                        19,
+                                                                        19,
+                                                                        1.0),
                                                               ),
                                                             ),
                                                           ],
@@ -1141,14 +1453,19 @@ class _HomePageState extends State<HomePage> {
   List<MatrizOperation> matrixHistory = [];
 
   void operacao(Matriz? matriz1, Matriz? matriz2, int chave, String valor) {
-    if (matriz1 == null && matriz2 == null && (chave == 4 ||chave == 5 || chave == 6)) {
-      return alerta(
-          'Formato inválido', 'Deve-se preencher pelo menos uma matriz para realizar a ${valor.toLowerCase()}!');
-    } else if ((matriz1 == null || matriz2 == null) && (chave != 4 && chave != 5 && chave != 6)) {
-      return alerta('Formato inválido', 'Deve-se preencher ambas matrizes para realizar a ${valor.toLowerCase()}!');
+    if (matriz1 == null &&
+        matriz2 == null &&
+        (chave == 4 || chave == 5 || chave == 6)) {
+      return alerta('Formato inválido',
+          'Deve-se preencher pelo menos uma matriz para realizar a ${valor.toLowerCase()}!');
+    } else if ((matriz1 == null || matriz2 == null) &&
+        (chave != 4 && chave != 5 && chave != 6)) {
+      return alerta('Formato inválido',
+          'Deve-se preencher ambas matrizes para realizar a ${valor.toLowerCase()}!');
     } else if ((matriz1 != null && matriz1.rows != matriz1.columns) ||
-                (matriz2 != null && matriz2.rows != matriz2.columns)) {
-      return alerta("Estrutura inválida!", "Para cálculo de ${valor.toLowerCase()} a matriz deve ser quadrada");
+        (matriz2 != null && matriz2.rows != matriz2.columns)) {
+      return alerta("Estrutura inválida!",
+          "Para cálculo de ${valor.toLowerCase()} a matriz deve ser quadrada");
     }
 
     Matriz matriz;
@@ -1282,7 +1599,8 @@ class _HomePageState extends State<HomePage> {
             return CarragamentoCalc();
           },
         );
-      } else if ((matriz1?.columns == 1 && matriz1?.rows == 1) || (matriz2?.columns == 1 && matriz2?.rows == 1)) {
+      } else if ((matriz1?.columns == 1 && matriz1?.rows == 1) ||
+          (matriz2?.columns == 1 && matriz2?.rows == 1)) {
         int escalar;
         showDialog(
           context: context,
@@ -1409,8 +1727,9 @@ class _HomePageState extends State<HomePage> {
                 db.updateDataBase();
 
                 resultado(matrizes, titulos);
-              } catch(exception) {
-                alerta('Ops...', exception.toString().replaceAll('Exception: ', ''));
+              } catch (exception) {
+                alerta('Ops...',
+                    exception.toString().replaceAll('Exception: ', ''));
               }
             });
 
@@ -1453,8 +1772,9 @@ class _HomePageState extends State<HomePage> {
                 db.updateDataBase();
 
                 resultado(matrizes, titulos);
-              } catch(exception) {
-                alerta('Ops...', exception.toString().replaceAll('Exception: ', ''));
+              } catch (exception) {
+                alerta('Ops...',
+                    exception.toString().replaceAll('Exception: ', ''));
               }
             });
 
@@ -1489,8 +1809,9 @@ class _HomePageState extends State<HomePage> {
                 db.updateDataBase();
 
                 resultado(matrizes, titulos);
-              } catch(exception) {
-                alerta('Ops...', exception.toString().replaceAll('Exception: ', ''));
+              } catch (exception) {
+                alerta('Ops...',
+                    exception.toString().replaceAll('Exception: ', ''));
               }
             });
 
@@ -1634,8 +1955,8 @@ class _HomePageState extends State<HomePage> {
         );
       }
     } else {
-      alerta(
-          "Estrutura inválida!", "Para cálculo de ${valor.toLowerCase()} as matrizes devem possuir a mesma estrutura");
+      alerta("Estrutura inválida!",
+          "Para cálculo de ${valor.toLowerCase()} as matrizes devem possuir a mesma estrutura");
     }
   }
 
@@ -1695,8 +2016,8 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Row(
-            children: [
+          title: Row(
+            children: const [
               Icon(
                 Icons.verified,
                 color: Colors.green,
@@ -1722,7 +2043,7 @@ class _HomePageState extends State<HomePage> {
                       columns: _buildColumns(matrizes[i]!.columns),
                       rows: _buildRows(matrizes[i]!.elements),
                       columnSpacing: 3,
-                      dataRowMinHeight: 24,
+                      dataRowHeight: 24,
                       headingRowHeight: 0,
                     ),
                     if (i < matrizes.length - 1) const Divider(),
