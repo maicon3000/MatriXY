@@ -846,9 +846,9 @@ class _HomePageState extends State<HomePage> {
                                               Row(
                                                 children: [
                                                   const Icon(
-                                                    Icons.euro_symbol,
-                                                    color: Colors.green,
-                                                    size: 36,
+                                                    Icons.calculate,
+                                                    color: Colors.orange,
+                                                    size: 32,
                                                   ),
                                                   const SizedBox(width: 8),
                                                   Text(operation.title!),
@@ -1358,8 +1358,7 @@ class _HomePageState extends State<HomePage> {
           builder: (BuildContext context) {
             Future.delayed(const Duration(milliseconds: 1000), () {
               Navigator.of(context).pop();
-              String titulo = 'Transposição';
-              Matriz matriz;
+              titulo = 'Transposição';
               matriz = matriz1.transposicao();
               matrizes.add(matriz);
               titulos.add(titulo);
@@ -1390,25 +1389,29 @@ class _HomePageState extends State<HomePage> {
           builder: (BuildContext context) {
             Future.delayed(const Duration(milliseconds: 1000), () {
               Navigator.of(context).pop();
-              titulo = 'Transposição';
-              matriz = matriz2.transposicao();
-              matrizes.add(matriz);
-              titulos.add(titulo);
+              try {
+                titulo = 'Transposição';
+                matriz = matriz2.transposicao();
+                matrizes.add(matriz);
+                titulos.add(titulo);
 
-              MatrizOperation operation = MatrizOperation(
-                matriz2: matriz2,
-                title: titulo,
-                result2: matriz,
-                icon: icone,
-              );
+                MatrizOperation operation = MatrizOperation(
+                  matriz2: matriz2,
+                  title: titulo,
+                  result2: matriz,
+                  icon: icone,
+                );
 
-              setState(() {
-                db.matrizHistory.add(operation);
-              });
+                setState(() {
+                  db.matrizHistory.add(operation);
+                });
 
-              db.updateDataBase();
+                db.updateDataBase();
 
-              resultado(matrizes, titulos);
+                resultado(matrizes, titulos);
+              } catch(exception) {
+                alerta('Ops...', exception.toString().replaceAll('Exception: ', ''));
+              }
             });
 
             return CarragamentoCalc();
@@ -1424,31 +1427,35 @@ class _HomePageState extends State<HomePage> {
           builder: (BuildContext context) {
             Future.delayed(const Duration(milliseconds: 1000), () {
               Navigator.of(context).pop();
-              titulo = 'Inversão';
-              matriz = matriz1.inversao();
-              matrizes.add(matriz);
-              titulos.add(titulo);
+              try {
+                titulo = 'Inversão';
+                matriz = matriz1.inversao();
+                matrizes.add(matriz);
+                titulos.add(titulo);
 
-              matriz = matriz2.inversao();
-              matrizes.add(matriz);
-              titulos.add(titulo);
+                matriz = matriz2.inversao();
+                matrizes.add(matriz);
+                titulos.add(titulo);
 
-              MatrizOperation operation = MatrizOperation(
-                matriz1: matriz1,
-                matriz2: matriz2,
-                title: titulo,
-                result: matrizes[0],
-                result2: matrizes[1],
-                icon: icone,
-              );
+                MatrizOperation operation = MatrizOperation(
+                  matriz1: matriz1,
+                  matriz2: matriz2,
+                  title: titulo,
+                  result: matrizes[0],
+                  result2: matrizes[1],
+                  icon: icone,
+                );
 
-              setState(() {
-                db.matrizHistory.add(operation);
-              });
+                setState(() {
+                  db.matrizHistory.add(operation);
+                });
 
-              db.updateDataBase();
+                db.updateDataBase();
 
-              resultado(matrizes, titulos);
+                resultado(matrizes, titulos);
+              } catch(exception) {
+                alerta('Ops...', exception.toString().replaceAll('Exception: ', ''));
+              }
             });
 
             return CarragamentoCalc();
@@ -1461,9 +1468,9 @@ class _HomePageState extends State<HomePage> {
           builder: (BuildContext context) {
             Future.delayed(const Duration(milliseconds: 1000), () {
               Navigator.of(context).pop();
-              String titulo = 'Inversão';
-              Matriz matriz;
+
               try {
+                titulo = 'Inversão';
                 matriz = matriz1.inversao();
                 matrizes.add(matriz);
                 titulos.add(titulo);
