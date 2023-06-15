@@ -132,11 +132,11 @@ class _HomePageState extends State<HomePage> {
           bottomRight: Radius.circular(30),
         ),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
+      child: const Padding(
+        padding: EdgeInsets.all(16.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             Text('Bem-Vindo mulekot'),
             Icon(Icons.person),
           ],
@@ -934,8 +934,8 @@ class _HomePageState extends State<HomePage> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: Row(
-                                        children: const [
+                                      title: const Row(
+                                        children: [
                                           Icon(
                                             Icons.verified,
                                             color: Colors.blue,
@@ -1462,8 +1462,9 @@ class _HomePageState extends State<HomePage> {
         (chave != 4 && chave != 5 && chave != 6)) {
       return alerta('Formato inválido',
           'Deve-se preencher ambas matrizes para realizar a ${valor.toLowerCase()}!');
-    } else if ((matriz1 != null && matriz1.rows != matriz1.columns) ||
-        (matriz2 != null && matriz2.rows != matriz2.columns)) {
+    } else if (((matriz1 != null && matriz1.rows != matriz1.columns) ||
+        (matriz2 != null && matriz2.rows != matriz2.columns)) &&
+        (chave == 4 || chave == 5 || chave == 6)) {
       return alerta("Estrutura inválida!",
           "Para cálculo de ${valor.toLowerCase()} a matriz deve ser quadrada");
     }
@@ -1569,6 +1570,7 @@ class _HomePageState extends State<HomePage> {
                 result: matriz,
                 icon: icone,
               );
+
               setState(() {
                 db.matrizHistory.add(operation);
               });
@@ -1593,6 +1595,23 @@ class _HomePageState extends State<HomePage> {
               matriz = matriz1!.multiplicacao(matriz2!);
               matrizes.add(matriz);
               titulos.add(titulo);
+
+              String icone = 'lib/assets/botao_multiplicacao.png';
+
+              MatrizOperation operation = MatrizOperation(
+                matriz1: matriz1,
+                matriz2: matriz2,
+                title: titulo,
+                result: matriz,
+                icon: icone,
+              );
+
+              setState(() {
+                db.matrizHistory.add(operation);
+              });
+
+              db.updateDataBase();
+
               resultado(matrizes, titulos);
             });
 
@@ -1620,6 +1639,23 @@ class _HomePageState extends State<HomePage> {
 
               matrizes.add(matriz);
               titulos.add(titulo);
+
+              String icone = 'lib/assets/botao_multiplicacao.png';
+
+              MatrizOperation operation = MatrizOperation(
+                matriz1: matriz1,
+                matriz2: matriz2,
+                title: titulo,
+                result: matriz,
+                icon: icone,
+              );
+
+              setState(() {
+                db.matrizHistory.add(operation);
+              });
+
+              db.updateDataBase();
+
               resultado(matrizes, titulos);
             });
 
@@ -2016,8 +2052,8 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Row(
-            children: const [
+          title: const Row(
+            children: [
               Icon(
                 Icons.verified,
                 color: Colors.green,
