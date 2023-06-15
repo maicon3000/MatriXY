@@ -113,27 +113,29 @@ class Matriz {
     return Matriz(rows, columns, resultado);
   }
 
-  Matriz Inversao() {
+  Matriz inversao() {
     if (rows != columns) {
-      throw Exception(
-          'A matriz deve ser quadrada para ter uma matriz inversa.');
+      throw Exception('A matriz deve ser quadrada para ter uma matriz inversa.');
     }
 
     int n = rows;
 
     // Criar uma matriz identidade do mesmo tamanho da matriz original.
-    List<List<int>> identidade =
-        List.generate(n, (i) => List<int>.filled(n, 0));
+    List<List<int>> identidade = List.generate(n, (i) => List<int>.filled(n, 0));
     for (int i = 0; i < n; i++) {
       identidade[i][i] = 1;
     }
 
     // Criar uma cópia da matriz original para manipulação.
-    List<List<int>> matrizOriginal =
-        List.generate(n, (i) => List<int>.from(elements[i]));
+    List<List<int>> matrizOriginal = List.generate(n, (i) => List<int>.from(elements[i]));
 
     // Realizar o processo de eliminação de Gauss-Jordan.
     for (int i = 0; i < n; i++) {
+      // Verificar se o pivô é zero.
+      if (matrizOriginal[i][i] == 0) {
+        return throw Exception('A matriz não possui uma matriz inversa.');
+      }
+
       // Dividir a linha atual pela diagonal principal para obter um pivô de 1.
       int pivot = matrizOriginal[i][i];
       for (int j = 0; j < n; j++) {

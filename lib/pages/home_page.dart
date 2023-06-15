@@ -226,13 +226,13 @@ class _HomePageState extends State<HomePage> {
                         operacao(matriz1, matriz2, item.keys.elementAt(3), item[item.keys.elementAt(3)]!);
                         break;
                       case 'Transposição':
-                        operacao(matriz1, matriz2, item.keys.elementAt(4), item[item.keys.elementAt(5)]!);
+                        operacao(matriz1, matriz2, item.keys.elementAt(4), item[item.keys.elementAt(4)]!);
                         break;
                       case 'Inversão':
-                        operacao(matriz1, matriz2, item.keys.elementAt(5), item[item.keys.elementAt(6)]!);
+                        operacao(matriz1, matriz2, item.keys.elementAt(5), item[item.keys.elementAt(5)]!);
                         break;
                       case 'Determinante':
-                        operacao(matriz1, matriz2, item.keys.elementAt(6), item[item.keys.elementAt(4)]!);
+                        operacao(matriz1, matriz2, item.keys.elementAt(6), item[item.keys.elementAt(6)]!);
                         break;
                       default:
                         alerta('Opção inválida', 'Deve-se selecionar uma operação!');
@@ -1141,11 +1141,14 @@ class _HomePageState extends State<HomePage> {
   List<MatrizOperation> matrixHistory = [];
 
   void operacao(Matriz? matriz1, Matriz? matriz2, int chave, String valor) {
-    if (matriz1 == null && matriz2 == null && (chave == 5 || chave == 6)) {
+    if (matriz1 == null && matriz2 == null && (chave == 4 ||chave == 5 || chave == 6)) {
       return alerta(
           'Formato inválido', 'Deve-se preencher pelo menos uma matriz para realizar a ${valor.toLowerCase()}!');
     } else if ((matriz1 == null || matriz2 == null) && (chave != 4 && chave != 5 && chave != 6)) {
       return alerta('Formato inválido', 'Deve-se preencher ambas matrizes para realizar a ${valor.toLowerCase()}!');
+    } else if ((matriz1 != null && matriz1.rows != matriz1.columns) ||
+                (matriz2 != null && matriz2.rows != matriz2.columns)) {
+      return alerta("Estrutura inválida!", "Para cálculo de ${valor.toLowerCase()} a matriz deve ser quadrada");
     }
 
     Matriz matriz;
@@ -1309,9 +1312,219 @@ class _HomePageState extends State<HomePage> {
         alerta("Estrutura inválida!",
             "Para cálculo de ${valor.toLowerCase()} as matrizes devem possuir a mesma estrutura ou o número de colunas da matriz X igual ao número de linhas da matriz Y (vice-versa) ou uma das matrizes multiplicadas por um valor único (escalar)");
       }
+    } else if (chave == 4) {
+      String icone = 'lib/assets/botao_transposicao.png';
+      if (matriz1 != null && matriz2 != null) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            Future.delayed(const Duration(milliseconds: 1000), () {
+              Navigator.of(context).pop();
+              titulo = 'Transposição';
+              matriz = matriz1.transposicao();
+              matrizes.add(matriz);
+              titulos.add(titulo);
+
+              matriz = matriz2.transposicao();
+              matrizes.add(matriz);
+              titulos.add(titulo);
+
+              MatrizOperation operation = MatrizOperation(
+                matriz1: matriz1,
+                matriz2: matriz2,
+                title: titulo,
+                result: matrizes[0],
+                result2: matrizes[1],
+                icon: icone,
+              );
+
+              setState(() {
+                db.matrizHistory.add(operation);
+              });
+
+              db.updateDataBase();
+
+              resultado(matrizes, titulos);
+            });
+
+            return CarragamentoCalc();
+          },
+        );
+      } else if (matriz1 != null && matriz2 == null) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            Future.delayed(const Duration(milliseconds: 1000), () {
+              Navigator.of(context).pop();
+              String titulo = 'Transposição';
+              Matriz matriz;
+              matriz = matriz1.transposicao();
+              matrizes.add(matriz);
+              titulos.add(titulo);
+
+              MatrizOperation operation = MatrizOperation(
+                matriz1: matriz1,
+                title: titulo,
+                result: matriz,
+                icon: icone,
+              );
+
+              setState(() {
+                db.matrizHistory.add(operation);
+              });
+
+              db.updateDataBase();
+
+              resultado(matrizes, titulos);
+            });
+
+            return CarragamentoCalc();
+          },
+        );
+      } else if (matriz1 == null && matriz2 != null) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            Future.delayed(const Duration(milliseconds: 1000), () {
+              Navigator.of(context).pop();
+              titulo = 'Transposição';
+              matriz = matriz2.transposicao();
+              matrizes.add(matriz);
+              titulos.add(titulo);
+
+              MatrizOperation operation = MatrizOperation(
+                matriz2: matriz2,
+                title: titulo,
+                result2: matriz,
+                icon: icone,
+              );
+
+              setState(() {
+                db.matrizHistory.add(operation);
+              });
+
+              db.updateDataBase();
+
+              resultado(matrizes, titulos);
+            });
+
+            return CarragamentoCalc();
+          },
+        );
+      }
+    } else if (chave == 5) {
+      String icone = 'lib/assets/botao_inversao.png';
+      if (matriz1 != null && matriz2 != null) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            Future.delayed(const Duration(milliseconds: 1000), () {
+              Navigator.of(context).pop();
+              titulo = 'Inversão';
+              matriz = matriz1.inversao();
+              matrizes.add(matriz);
+              titulos.add(titulo);
+
+              matriz = matriz2.inversao();
+              matrizes.add(matriz);
+              titulos.add(titulo);
+
+              MatrizOperation operation = MatrizOperation(
+                matriz1: matriz1,
+                matriz2: matriz2,
+                title: titulo,
+                result: matrizes[0],
+                result2: matrizes[1],
+                icon: icone,
+              );
+
+              setState(() {
+                db.matrizHistory.add(operation);
+              });
+
+              db.updateDataBase();
+
+              resultado(matrizes, titulos);
+            });
+
+            return CarragamentoCalc();
+          },
+        );
+      } else if (matriz1 != null && matriz2 == null) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            Future.delayed(const Duration(milliseconds: 1000), () {
+              Navigator.of(context).pop();
+              String titulo = 'Inversão';
+              Matriz matriz;
+              try {
+                matriz = matriz1.inversao();
+                matrizes.add(matriz);
+                titulos.add(titulo);
+
+                MatrizOperation operation = MatrizOperation(
+                  matriz1: matriz1,
+                  title: titulo,
+                  result: matriz,
+                  icon: icone,
+                );
+
+                setState(() {
+                  db.matrizHistory.add(operation);
+                });
+
+                db.updateDataBase();
+
+                resultado(matrizes, titulos);
+              } catch(exception) {
+                alerta('Ops...', exception.toString().replaceAll('Exception: ', ''));
+              }
+            });
+
+            return CarragamentoCalc();
+          },
+        );
+      } else if (matriz1 == null && matriz2 != null) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            Future.delayed(const Duration(milliseconds: 1000), () {
+              Navigator.of(context).pop();
+              titulo = 'Inversão';
+              matriz = matriz2.inversao();
+              matrizes.add(matriz);
+              titulos.add(titulo);
+
+              MatrizOperation operation = MatrizOperation(
+                matriz2: matriz2,
+                title: titulo,
+                result2: matriz,
+                icon: icone,
+              );
+
+              setState(() {
+                db.matrizHistory.add(operation);
+              });
+
+              db.updateDataBase();
+
+              resultado(matrizes, titulos);
+            });
+
+            return CarragamentoCalc();
+          },
+        );
+      }
     } else if (chave == 6) {
       String icone = 'lib/assets/botao_determinante.png';
-      if (matriz1 != null && matriz2 != null && matriz1.rows == matriz1.columns && matriz2.rows == matriz2.columns) {
+      if (matriz1 != null && matriz2 != null) {
         showDialog(
           context: context,
           barrierDismissible: false,
@@ -1349,7 +1562,7 @@ class _HomePageState extends State<HomePage> {
             return CarragamentoCalc();
           },
         );
-      } else if (matriz1 != null && matriz2 == null && matriz1.rows == matriz1.columns) {
+      } else if (matriz1 != null && matriz2 == null) {
         showDialog(
           context: context,
           barrierDismissible: false,
@@ -1381,7 +1594,7 @@ class _HomePageState extends State<HomePage> {
             return CarragamentoCalc();
           },
         );
-      } else if (matriz1 == null && matriz2 != null && matriz2.rows == matriz2.columns) {
+      } else if (matriz1 == null && matriz2 != null) {
         showDialog(
           context: context,
           barrierDismissible: false,
@@ -1412,8 +1625,6 @@ class _HomePageState extends State<HomePage> {
             return CarragamentoCalc();
           },
         );
-      } else {
-        alerta("Estrutura inválida!", "Para cálculo de determinante a matriz deve ser quadrada");
       }
     } else {
       alerta(
