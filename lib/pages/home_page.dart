@@ -27,8 +27,6 @@ class MatrizOperation {
 class MatrizOperationAdapter extends TypeAdapter<MatrizOperation> {
   @override
   MatrizOperation read(BinaryReader reader) {
-    String? avatarImagePath =
-        reader.read(); // Leia a string do caminho/nome da imagem
     Matriz? matriz1 = reader.read(); // Leia o objeto Matriz
     Matriz? matriz2 = reader.read(); // Leia o objeto Matriz
     String? title = reader.read(); // Leia a string
