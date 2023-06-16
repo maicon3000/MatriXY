@@ -6,6 +6,16 @@ import '../data/database.dart';
 import '../matrix/matriz.dart';
 import 'package:lottie/lottie.dart';
 
+class User {
+  String name;
+  String selectedSex;
+
+  User({
+    required this.name,
+    required this.selectedSex,
+  });
+}
+
 class MatrizOperation {
   Matriz? matriz1;
   Matriz? matriz2;
@@ -59,14 +69,11 @@ class MatrizOperationAdapter extends TypeAdapter<MatrizOperation> {
 }
 
 class HomePage extends StatefulWidget {
-  final Image? selectedAvatar;
-  final String? name;
-  final String? selectedSex;
+  final User? user;
+
   const HomePage({
     super.key,
-    this.selectedAvatar,
-    this.name,
-    this.selectedSex,
+    this.user,
   });
 
   @override
@@ -86,6 +93,12 @@ class _HomePageState extends State<HomePage> {
     } else {
       //ja existe informacao
       db.loadData();
+    }
+    if (_myBox.get('USERDATA') == null) {
+      db.createInitialDateUser();
+    } else {
+      //ja existe informacao
+      db.loadDataUser();
     }
     super.initState();
   }
@@ -120,8 +133,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    //CADA TILE DO HISTORICO
-
+    List<User> userData = [];
     //APPBAR
     final myAppBarContainer = Container(
       //'appbar'
@@ -145,12 +157,14 @@ class _HomePageState extends State<HomePage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            if (widget.selectedSex == 'M') Text('Bem-Vindo ${widget.name}'),
-            if (widget.selectedSex == 'F') Text('Bem-Vinda ${widget.name}'),
-            if (widget.selectedSex == 'null')
-              Text('Bem-Vindo(a) ${widget.name}'),
-            //operador de coalescencia nula(??)
-            widget.selectedAvatar ?? Container(),
+            if (widget.user?.selectedSex == 'M')
+              Text('Bem-Vindo ${widget.user?.name}'),
+            if (widget.user?.selectedSex == 'F')
+              Text('Bem-Vinda ${widget.user?.name}'),
+            if (widget.user?.selectedSex == null)
+              Text('Bem-Vindo(a) ${widget.user?.name}'),
+            // Verifique se os dados da imagem são válidos antes de exibi-la
+            //avatar
           ],
         ),
       ),

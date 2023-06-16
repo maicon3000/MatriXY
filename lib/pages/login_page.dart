@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:matrixy/pages/home_page.dart';
 
+import '../data/database.dart';
 import 'avatar_selection.dart';
 
 class LoginPage extends StatefulWidget {
@@ -10,11 +12,13 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final nameController = TextEditingController();
-  String selectedSex = '';
+  HistoricDataBase db = HistoricDataBase();
 
   @override
   Widget build(BuildContext context) {
+    final nameController = TextEditingController();
+    String selectedSex = '';
+
     MediaQueryData mediaQueryData = MediaQuery.of(context);
     double screenWidth = mediaQueryData.size.width;
     double screenHeight = mediaQueryData.size.height;
@@ -111,15 +115,37 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ],
                 ),
+/*
+                MatrizOperation operation = MatrizOperation(
+                matriz1: matriz1,
+                matriz2: matriz2,
+                title: titulo,
+                result: matriz,
+                icon: icone,
+              );
+
+              setState(() {
+                db.matrizHistory.add(operation);
+              });
+
+              db.updateDataBase();
+*/
+
                 GestureDetector(
                   onTap: () {
+                    User user = User(
+                      name: nameController.text,
+                      selectedSex: selectedSex,
+                    );
+
+                    db.userData.add(user);
+
                     // Navegar para a tela de seleção do avatar
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => AvatarSelectionPage(
-                          name: nameController.text,
-                          selectedSex: selectedSex,
+                          user: user,
                         ),
                       ),
                     );

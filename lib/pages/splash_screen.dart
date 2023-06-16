@@ -7,7 +7,8 @@ import '../data/database.dart';
 import 'login_page.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  final User? user;
+  const SplashScreen({super.key, this.user});
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -38,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   void navigateBasedOnCache() async {
-    if (_myBox.get('HISTORICLIST') == null) {
+    if (_myBox.get('USERDATA') == null) {
       // O usuário nunca entrou no aplicativo, então redirecione para a tela de login
       await Future.delayed(const Duration(
           milliseconds: 5000)); // Adiciona um pequeno atraso de 500ms
@@ -48,8 +49,10 @@ class _SplashScreenState extends State<SplashScreen>
       );
     } else {
       // O usuário já tem dados no cache, então redirecione para a página inicial
-      await Future.delayed(const Duration(
-          milliseconds: 5000)); // Adiciona um pequeno atraso de 500ms
+      await Future.delayed(
+        const Duration(milliseconds: 5000),
+      ); // Adiciona um pequeno atraso de 500ms
+
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const HomePage()),

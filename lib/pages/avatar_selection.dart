@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
-
+import '../data/database.dart';
 import 'home_page.dart';
 
 class AvatarSelectionPage extends StatelessWidget {
-  final Image? selectedAvatar;
-  final String? name;
-  final String? selectedSex;
-  const AvatarSelectionPage({
+  User? user;
+  AvatarSelectionPage({
     Key? key,
-    this.selectedAvatar,
-    this.name,
-    this.selectedSex,
+    this.user,
   }) : super(key: key);
+
+  HistoricDataBase db = HistoricDataBase();
 
   @override
   Widget build(BuildContext context) {
@@ -24,15 +22,14 @@ class AvatarSelectionPage extends StatelessWidget {
       Image.asset('lib/assets/robot.png'),
     ];
 
-    void goToHomePage(Image selectedAvatar) {
+    void goToHomePage() {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => HomePage(
-                  selectedAvatar: selectedAvatar,
-                  name: name,
-                  selectedSex: selectedSex,
-                )),
+          builder: (context) => HomePage(
+            user: user,
+          ),
+        ),
       );
     }
 
@@ -60,7 +57,7 @@ class AvatarSelectionPage extends StatelessWidget {
                   return Column(
                     children: [
                       GestureDetector(
-                        onTap: () => goToHomePage(avatarList[index]),
+                        onTap: () => goToHomePage(),
                         child: SizedBox(
                           height: MediaQuery.of(context).size.width * 0.13,
                           child: avatarList[index],

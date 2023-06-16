@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/adapters.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:matrixy/pages/home_page.dart';
 import 'package:matrixy/pages/splash_screen.dart';
-
 import 'matrix/matriz.dart';
 
 void main() async {
@@ -15,6 +14,7 @@ void main() async {
 
   //open a box
   var box = await Hive.openBox('mybox');
+
   runApp(const MyApp());
 }
 
