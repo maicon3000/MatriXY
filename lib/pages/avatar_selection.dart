@@ -64,6 +64,9 @@ class AvatarSelectionPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
+                height: MediaQuery.of(context).size.height * 0.18,
+              ),
+              SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
                 child: ListView.builder(
@@ -74,12 +77,12 @@ class AvatarSelectionPage extends StatelessWidget {
                         GestureDetector(
                           onTap: () => goToHomePage(images[index]),
                           child: SizedBox(
-                            height: MediaQuery.of(context).size.width * 0.13,
+                            height: MediaQuery.of(context).size.height * 0.07,
                             child: avatarList[index],
                           ),
                         ),
                         SizedBox(
-                          height: MediaQuery.of(context).size.width * 0.05,
+                          height: MediaQuery.of(context).size.height * 0.03,
                         ),
                       ],
                     );

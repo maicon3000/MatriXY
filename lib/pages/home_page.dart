@@ -193,29 +193,36 @@ class _HomePageState extends State<HomePage> {
       ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Column(
           children: [
-            if (widget.user?.selectedSex == 'M')
-              Text('Bem-Vindo ${widget.user?.name}'),
-            if (widget.user?.selectedSex == 'F')
-              Text('Bem-Vinda ${widget.user?.name}'),
-            if (widget.user?.selectedSex == null)
-              Text('Bem-Vindo(a) ${widget.user?.name}'),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.015,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (widget.user?.selectedSex == 'M')
+                  Text('Bem-Vindo ${widget.user?.name}', style: const TextStyle(fontSize: 16),),
+                if (widget.user?.selectedSex == 'F')
+                  Text('Bem-Vinda ${widget.user?.name}', style: const TextStyle(fontSize: 16),),
+                if (widget.user?.selectedSex == null)
+                  Text('Bem-Vindo(a) ${widget.user?.name}', style: const TextStyle(fontSize: 16),),
 
-            // Verifique se os dados da imagem são válidos antes de exibi-la
-            if (widget.user?.images != null)
-              Image.asset(
-                widget.user!.images!,
-                width: 50, // Defina a largura desejada para a imagem
-                height: 50, // Defina a altura desejada para a imagem
-              )
-            else
-              Image.asset(
-                'lib/assets/imageNull.png',
-                width: 50, // Defina a largura desejada para a imagem
-                height: 50, // Defina a altura desejada para a imagem
-              )
+                // Verifique se os dados da imagem são válidos antes de exibi-la
+                if (widget.user?.images != null)
+                  Image.asset(
+                    widget.user!.images!,
+                    width: 45, // Defina a largura desejada para a imagem
+                    height: 45, // Defina a altura desejada para a imagem
+                  )
+                else
+                  Image.asset(
+                    'lib/assets/imageNull.png',
+                    width: 50, // Defina a largura desejada para a imagem
+                    height: 50, // Defina a altura desejada para a imagem
+                  )
+              ],
+            ),
           ],
         ),
       ),
@@ -1011,8 +1018,8 @@ class _HomePageState extends State<HomePage> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: Row(
-                                        children: const [
+                                      title: const Row(
+                                        children: [
                                           Icon(
                                             Icons.verified,
                                             color: Colors.blue,
@@ -1023,8 +1030,6 @@ class _HomePageState extends State<HomePage> {
                                         ],
                                       ), //Text(operation.title!),
                                       content: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
                                         children: [
                                           Column(
                                             crossAxisAlignment:
@@ -1065,7 +1070,7 @@ class _HomePageState extends State<HomePage> {
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w300,
-                                                                  fontSize: 9,
+                                                                  fontSize: 12,
                                                                   color: Color
                                                                       .fromRGBO(
                                                                           150,
@@ -1118,7 +1123,7 @@ class _HomePageState extends State<HomePage> {
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w300,
-                                                                  fontSize: 9,
+                                                                  fontSize: 12,
                                                                   color: Color
                                                                       .fromRGBO(
                                                                           150,
@@ -1271,13 +1276,14 @@ class _HomePageState extends State<HomePage> {
                                                               'Inversão' ||
                                                           operation.title! ==
                                                               'Determinante')
-                                                  ? Row(
+                                                  ? Column(
+                                                      mainAxisAlignment: MainAxisAlignment.center,
                                                       children: [
-                                                        const Padding(
+                                                        Padding(
                                                           padding:
                                                               EdgeInsets.only(
-                                                                  right: 8.0),
-                                                          child: Text(
+                                                                right: MediaQuery.of(context).size.width * 0.5,),
+                                                          child: const Text(
                                                             'Resultado X:',
                                                             style: TextStyle(
                                                               fontWeight:
@@ -1316,11 +1322,11 @@ class _HomePageState extends State<HomePage> {
                                                                     1.0),
                                                           ),
                                                         ),
-                                                        const Padding(
+                                                        Padding(
                                                           padding:
                                                               EdgeInsets.only(
-                                                                  right: 8.0),
-                                                          child: Text(
+                                                                  top: 18.0, right: MediaQuery.of(context).size.width * 0.5,),
+                                                          child: const Text(
                                                             'Resultado Y:',
                                                             style: TextStyle(
                                                               fontWeight:
@@ -2129,8 +2135,8 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Row(
-            children: const [
+          title: const Row(
+            children: [
               Icon(
                 Icons.verified,
                 color: Colors.green,
