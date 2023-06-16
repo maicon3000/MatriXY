@@ -39,23 +39,22 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   void navigateBasedOnCache() async {
-    if (_myBox.get('USERDATA') == null) {
+    HistoricDataBase db = HistoricDataBase();
+    db.loadDataUser(); // Carregar dados do usuário do Hive
+
+    if (db.userData.isEmpty) {
       // O usuário nunca entrou no aplicativo, então redirecione para a tela de login
-      await Future.delayed(const Duration(
-          milliseconds: 5000)); // Adiciona um pequeno atraso de 500ms
+      await Future.delayed(const Duration(milliseconds: 5000));
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const LoginPage()),
       );
     } else {
       // O usuário já tem dados no cache, então redirecione para a página inicial
-      await Future.delayed(
-        const Duration(milliseconds: 5000),
-      ); // Adiciona um pequeno atraso de 500ms
-
+      await Future.delayed(const Duration(milliseconds: 5000));
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(builder: (context) => HomePage(user: db.userData[0])),
       );
     }
   }

@@ -3,13 +3,13 @@ import '../data/database.dart';
 import 'home_page.dart';
 
 class AvatarSelectionPage extends StatelessWidget {
-  User? user;
-  AvatarSelectionPage({
-    Key? key,
-    this.user,
-  }) : super(key: key);
-
-  HistoricDataBase db = HistoricDataBase();
+  final String name;
+  final String selectedSex;
+  const AvatarSelectionPage({
+    super.key,
+    required this.name,
+    required this.selectedSex,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +23,14 @@ class AvatarSelectionPage extends StatelessWidget {
     ];
 
     void goToHomePage() {
+      HistoricDataBase db = HistoricDataBase();
+
+      User user = User(name: name, selectedSex: selectedSex);
+
+      db.userData.add(user);
+      db.updateDataBaseUser(); // Salvar dados do usuário no Hive
+      db.loadDataUser(); // Carregar dados do usuário do Hive
+
       Navigator.push(
         context,
         MaterialPageRoute(

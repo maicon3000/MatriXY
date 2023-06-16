@@ -16,6 +16,40 @@ class User {
   });
 }
 
+class UserAdapter extends TypeAdapter<User> {
+  @override
+  User read(BinaryReader reader) {
+    final fieldsCount = reader.readByte();
+    Map<dynamic, dynamic> fields = {};
+
+    for (var i = 0; i < fieldsCount; i++) {
+      final key = reader.readByte();
+      final dynamic value = reader.read();
+
+      fields[key] = value;
+    }
+
+    return User(
+      name: fields[0] as String,
+      selectedSex: fields[1] as String,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, User user) {
+    writer.writeByte(2); // Número de campos no objeto User
+
+    writer.writeByte(0); // Índice 0 do campo name
+    writer.write(user.name);
+
+    writer.writeByte(1); // Índice 1 do campo selectedSex
+    writer.write(user.selectedSex);
+  }
+
+  @override
+  int get typeId => 1; // Identificador exclusivo para o tipo User
+}
+
 class MatrizOperation {
   Matriz? matriz1;
   Matriz? matriz2;
@@ -133,7 +167,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    List<User> userData = [];
     //APPBAR
     final myAppBarContainer = Container(
       //'appbar'
@@ -163,6 +196,7 @@ class _HomePageState extends State<HomePage> {
               Text('Bem-Vinda ${widget.user?.name}'),
             if (widget.user?.selectedSex == null)
               Text('Bem-Vindo(a) ${widget.user?.name}'),
+            const Text('Bem-Vindx Usuario!'),
             // Verifique se os dados da imagem são válidos antes de exibi-la
             //avatar
           ],

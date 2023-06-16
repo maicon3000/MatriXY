@@ -11,6 +11,7 @@ void main() async {
 
   Hive.registerAdapter(MatrizOperationAdapter());
   Hive.registerAdapter(MatrizAdapter());
+  Hive.registerAdapter(UserAdapter());
 
   //open a box
   var box = await Hive.openBox('mybox');
