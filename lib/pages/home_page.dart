@@ -9,10 +9,12 @@ import 'package:lottie/lottie.dart';
 class User {
   String name;
   String selectedSex;
+  String? images;
 
   User({
     required this.name,
     required this.selectedSex,
+    required this.images,
   });
 }
 
@@ -32,6 +34,7 @@ class UserAdapter extends TypeAdapter<User> {
     return User(
       name: fields[0] as String,
       selectedSex: fields[1] as String,
+      images: fields[2] as String?,
     );
   }
 
@@ -128,7 +131,7 @@ class _HomePageState extends State<HomePage> {
       //ja existe informacao
       db.loadData();
     }
-    if (_myBox.get('USERDATA') == null) {
+    if (db.userData.isEmpty) {
       db.createInitialDateUser();
     } else {
       //ja existe informacao
@@ -196,9 +199,20 @@ class _HomePageState extends State<HomePage> {
               Text('Bem-Vinda ${widget.user?.name}'),
             if (widget.user?.selectedSex == null)
               Text('Bem-Vindo(a) ${widget.user?.name}'),
-            const Text('Bem-Vindx Usuario!'),
+
             // Verifique se os dados da imagem são válidos antes de exibi-la
-            //avatar
+            if (widget.user?.images != null)
+              Image.asset(
+                widget.user!.images!,
+                width: 50, // Defina a largura desejada para a imagem
+                height: 50, // Defina a altura desejada para a imagem
+              )
+            else
+              Image.asset(
+                'lib/assets/imageNull.png',
+                width: 50, // Defina a largura desejada para a imagem
+                height: 50, // Defina a altura desejada para a imagem
+              )
           ],
         ),
       ),
@@ -1540,7 +1554,7 @@ class _HomePageState extends State<HomePage> {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          Future.delayed(const Duration(milliseconds: 1000), () {
+          Future.delayed(const Duration(milliseconds: 3000), () {
             Navigator.of(context).pop();
             titulo = 'Adição';
             // Continue com o cálculo aqui
@@ -1577,7 +1591,7 @@ class _HomePageState extends State<HomePage> {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          Future.delayed(const Duration(milliseconds: 1000), () {
+          Future.delayed(const Duration(milliseconds: 3000), () {
             Navigator.of(context).pop();
             titulo = 'Subtração';
             // Continue com o cálculo aqui
@@ -1613,7 +1627,7 @@ class _HomePageState extends State<HomePage> {
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            Future.delayed(const Duration(milliseconds: 1000), () {
+            Future.delayed(const Duration(milliseconds: 3000), () {
               Navigator.of(context).pop();
               titulo = 'Multiplicação';
               // Continue com o cálculo aqui
@@ -1648,7 +1662,7 @@ class _HomePageState extends State<HomePage> {
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            Future.delayed(const Duration(milliseconds: 5000), () {
+            Future.delayed(const Duration(milliseconds: 3000), () {
               Navigator.of(context).pop();
               titulo = 'Multiplicação';
               // Continue com o cálculo aqui
@@ -1685,7 +1699,7 @@ class _HomePageState extends State<HomePage> {
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            Future.delayed(const Duration(milliseconds: 5000), () {
+            Future.delayed(const Duration(milliseconds: 3000), () {
               Navigator.of(context).pop();
               titulo = 'Multiplicação';
               // Continue com o cálculo aqui
@@ -1733,7 +1747,7 @@ class _HomePageState extends State<HomePage> {
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            Future.delayed(const Duration(milliseconds: 1000), () {
+            Future.delayed(const Duration(milliseconds: 3000), () {
               Navigator.of(context).pop();
               titulo = 'Transposição';
               matriz = matriz1.transposicao();
@@ -1770,7 +1784,7 @@ class _HomePageState extends State<HomePage> {
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            Future.delayed(const Duration(milliseconds: 1000), () {
+            Future.delayed(const Duration(milliseconds: 3000), () {
               Navigator.of(context).pop();
               titulo = 'Transposição';
               matriz = matriz1.transposicao();
@@ -1801,7 +1815,7 @@ class _HomePageState extends State<HomePage> {
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            Future.delayed(const Duration(milliseconds: 1000), () {
+            Future.delayed(const Duration(milliseconds: 3000), () {
               Navigator.of(context).pop();
               try {
                 titulo = 'Transposição';
@@ -1840,7 +1854,7 @@ class _HomePageState extends State<HomePage> {
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            Future.delayed(const Duration(milliseconds: 1000), () {
+            Future.delayed(const Duration(milliseconds: 3000), () {
               Navigator.of(context).pop();
               try {
                 titulo = 'Inversão';
@@ -1882,7 +1896,7 @@ class _HomePageState extends State<HomePage> {
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            Future.delayed(const Duration(milliseconds: 1000), () {
+            Future.delayed(const Duration(milliseconds: 3000), () {
               Navigator.of(context).pop();
 
               try {
@@ -1919,7 +1933,7 @@ class _HomePageState extends State<HomePage> {
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            Future.delayed(const Duration(milliseconds: 1000), () {
+            Future.delayed(const Duration(milliseconds: 3000), () {
               Navigator.of(context).pop();
               titulo = 'Inversão';
               matriz = matriz2.inversao();
@@ -1953,7 +1967,7 @@ class _HomePageState extends State<HomePage> {
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            Future.delayed(const Duration(milliseconds: 1000), () {
+            Future.delayed(const Duration(milliseconds: 3000), () {
               Navigator.of(context).pop();
               titulo = 'Determinante';
               matriz = matriz1.determinante(matriz1.elements);
@@ -1991,7 +2005,7 @@ class _HomePageState extends State<HomePage> {
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            Future.delayed(const Duration(milliseconds: 1000), () {
+            Future.delayed(const Duration(milliseconds: 3000), () {
               Navigator.of(context).pop();
               String titulo = 'Determinante';
               Matriz matriz;
@@ -2023,7 +2037,7 @@ class _HomePageState extends State<HomePage> {
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) {
-            Future.delayed(const Duration(milliseconds: 1000), () {
+            Future.delayed(const Duration(milliseconds: 3000), () {
               Navigator.of(context).pop();
               titulo = 'Determinante';
               matriz = matriz2.determinante(matriz2.elements);

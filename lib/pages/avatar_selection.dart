@@ -5,11 +5,8 @@ import 'home_page.dart';
 class AvatarSelectionPage extends StatelessWidget {
   final String name;
   final String selectedSex;
-  const AvatarSelectionPage({
-    super.key,
-    required this.name,
-    required this.selectedSex,
-  });
+  const AvatarSelectionPage(
+      {super.key, required this.name, required this.selectedSex});
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +19,19 @@ class AvatarSelectionPage extends StatelessWidget {
       Image.asset('lib/assets/robot.png'),
     ];
 
-    void goToHomePage() {
+    List images = [
+      'lib/assets/boy1.png',
+      'lib/assets/boy2.png',
+      'lib/assets/girl1.png',
+      'lib/assets/girl2.png',
+      'lib/assets/monster.png',
+      'lib/assets/robot.png',
+    ];
+
+    void goToHomePage(imag) {
       HistoricDataBase db = HistoricDataBase();
 
-      User user = User(name: name, selectedSex: selectedSex);
+      User user = User(name: name, selectedSex: selectedSex, images: imag);
 
       db.userData.add(user);
       db.updateDataBaseUser(); // Salvar dados do usuário no Hive
@@ -42,44 +48,46 @@ class AvatarSelectionPage extends StatelessWidget {
     }
 
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromRGBO(128, 67, 0, 1),
-              Color.fromRGBO(65, 32, 0, 1),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.7,
-              child: ListView.builder(
-                itemCount: avatarList.length,
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () => goToHomePage(),
-                        child: SizedBox(
-                          height: MediaQuery.of(context).size.width * 0.13,
-                          child: avatarList[index],
-                        ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.width * 0.05,
-                      ),
-                    ],
-                  );
-                },
-              ),
+      body: SingleChildScrollView(
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color.fromRGBO(128, 67, 0, 1),
+                Color.fromRGBO(65, 32, 0, 1),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
-          ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: ListView.builder(
+                  itemCount: avatarList.length,
+                  itemBuilder: (context, index) {
+                    return Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () => goToHomePage(images[index]),
+                          child: SizedBox(
+                            height: MediaQuery.of(context).size.width * 0.13,
+                            child: avatarList[index],
+                          ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.width * 0.05,
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

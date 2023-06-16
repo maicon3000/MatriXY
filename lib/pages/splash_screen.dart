@@ -52,6 +52,8 @@ class _SplashScreenState extends State<SplashScreen>
     } else {
       // O usuário já tem dados no cache, então redirecione para a página inicial
       await Future.delayed(const Duration(milliseconds: 5000));
+      // Salvar dados do usuário no Hive
+      db.loadDataUser(); // Carregar dados do usuário do Hive
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => HomePage(user: db.userData[0])),

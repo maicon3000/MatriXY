@@ -58,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
                   color: Colors.white,
                 ),
                 const Text(
-                  'Welcome to MatriXY!',
+                  'Bem-vindo ao MatriXY!',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18.0,
@@ -70,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white.withOpacity(0.2),
-                    hintText: 'What\'s your name?',
+                    hintText: 'Qual seu nome?',
                     hintStyle: TextStyle(color: Colors.white.withOpacity(0.6)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
@@ -86,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     ChoiceChip(
-                      label: const Text('Male'),
+                      label: const Text('Masculino'),
                       selected: selectedSex == 'M',
                       onSelected: (selected) {
                         setState(() {
@@ -95,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                       },
                     ),
                     ChoiceChip(
-                      label: const Text('Female'),
+                      label: const Text('Feminino'),
                       selected: selectedSex == 'F',
                       onSelected: (selected) {
                         setState(() {
@@ -104,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                       },
                     ),
                     ChoiceChip(
-                      label: const Text('Prefer not to say'),
+                      label: const Text('indefinido'),
                       selected: selectedSex == 'null',
                       onSelected: (selected) {
                         setState(() {
@@ -150,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     padding: const EdgeInsets.all(16.0),
                     child: const Text(
-                      'Select Avatar',
+                      'Selecione o Avatar',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 16.0,
