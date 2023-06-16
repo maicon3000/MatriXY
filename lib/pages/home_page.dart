@@ -39,14 +39,17 @@ class UserAdapter extends TypeAdapter<User> {
   }
 
   @override
-  void write(BinaryWriter writer, User user) {
-    writer.writeByte(2); // Número de campos no objeto User
+  void write(BinaryWriter writer, User obj) {
+    writer.writeByte(3); // Número de campos no objeto User
 
     writer.writeByte(0); // Índice 0 do campo name
-    writer.write(user.name);
+    writer.write(obj.name);
 
     writer.writeByte(1); // Índice 1 do campo selectedSex
-    writer.write(user.selectedSex);
+    writer.write(obj.selectedSex);
+
+    writer.writeByte(2); // Índice 0 do campo name
+    writer.write(obj.images);
   }
 
   @override
