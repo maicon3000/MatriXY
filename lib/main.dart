@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
-// ignore: unused_import
-import 'package:matrixyy/dialogs/custom_alert_dialog1.1.dart';
-import 'package:matrixyy/pages/home_page.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:matrixy/pages/home_page.dart';
+import 'package:matrixy/pages/splash_screen.dart';
+import 'matrix/matriz.dart';
 
-void main() {
+void main() async {
+  // Registre o adaptador
+
+  await Hive.initFlutter();
+
+  Hive.registerAdapter(MatrizOperationAdapter());
+  Hive.registerAdapter(MatrizAdapter());
+  Hive.registerAdapter(UserAdapter());
+
+  //open a box
+  var box = await Hive.openBox('mybox');
+
   runApp(const MyApp());
 }
 
@@ -19,7 +31,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomePage(),
+      home: const SplashScreen(),
     );
   }
 }
